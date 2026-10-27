@@ -1,0 +1,99 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply block;
+}
+
+.tabs {
+	@apply mb-3.5 flex gap-1 rounded-sd bg-bg p-1;
+}
+
+.tab {
+	@apply flex flex-1 flex-col items-center gap-0.5 rounded-sd border-0 bg-transparent px-1 py-2 text-[11px] text-muted;
+	@apply font-[inherit];
+}
+
+.tab i {
+	@apply text-[20px];
+}
+
+.tab--active {
+	@apply bg-surface-2 text-text;
+}
+
+.hint {
+	@apply sd-hint mb-2.5;
+}
+
+.error {
+	@apply sd-error;
+}
+
+.row {
+	@apply mb-3 flex gap-2;
+}
+
+input,
+select {
+	@apply sd-input min-w-0 flex-1;
+}
+
+select {
+	@apply w-auto flex-none sd-select;
+}
+
+.primary {
+	@apply sd-btn-primary px-3.5 py-2.5 whitespace-nowrap;
+}
+
+.primary:disabled {
+	@apply opacity-50;
+}
+
+.grid {
+	@apply grid gap-1.5;
+	@apply sd-grid-fill-[52px];
+}
+
+.cell {
+	@apply grid aspect-square place-items-center rounded-sd border-0 bg-surface-2 text-[26px] text-text;
+}
+
+.cell--active {
+	@apply outline-2 outline-accent-soft;
+}
+
+.logos {
+	@apply m-0 flex list-none flex-col gap-1 p-0;
+}
+
+.logo {
+	@apply flex w-full items-center gap-2.5 rounded-sd border-0 bg-surface-2 px-2.5 py-2 text-left text-text;
+	@apply sd-font-inherit;
+}
+
+.logo:disabled {
+	@apply opacity-50;
+}
+
+.logo__swatch {
+	@apply size-[18px] rounded-full;
+	box-shadow: 0 0 0 1px color-mix(in srgb, var(--sd-text) 25%, transparent);
+}
+
+.logo__title {
+	@apply flex-1;
+}
+
+.logo__slug {
+	@apply text-[12px] text-faint;
+}
+
+.group {
+	@apply mt-3.5 mb-1.5 sd-group-label;
+}
+
+.remove {
+	@apply mt-4 inline-flex items-center gap-1.5 rounded-sd border-0 bg-transparent px-3 py-2 text-danger-text;
+	@apply sd-font-inherit;
+}

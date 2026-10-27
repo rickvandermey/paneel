@@ -1,0 +1,35 @@
+@reference '../../../../libs/styles/src/tailwind.css';
+
+:host {
+	@apply flex h-dvh flex-col pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)];
+}
+
+.pair {
+	@apply m-auto flex max-w-[480px] flex-col gap-3 px-4 py-6;
+}
+
+.pair h1 {
+	@apply m-0 text-[22px];
+}
+
+.pair p {
+	@apply m-0 text-muted;
+}
+
+.pair .error {
+	@apply sd-error;
+}
+
+.pair input,
+.pair button {
+	@apply rounded-sd px-3.5 py-3 text-[16px];
+	@apply font-[inherit];
+}
+
+.pair input {
+	@apply border border-border bg-surface text-text;
+}
+
+.pair button {
+	@apply border-0 bg-accent font-semibold text-accent-text;
+}

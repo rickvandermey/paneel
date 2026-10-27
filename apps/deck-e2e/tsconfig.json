@@ -1,0 +1,10 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"strict": true,
+		"outDir": "../../dist/out-tsc",
+		"types": ["node"]
+	},
+	"include": ["src/**/*.ts", "playwright.config.ts"],
+	"exclude": ["src/features-gen/**"]
+}

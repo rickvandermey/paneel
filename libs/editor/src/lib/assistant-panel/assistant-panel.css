@@ -1,0 +1,87 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply flex min-h-0 flex-col gap-3;
+}
+
+.hint {
+	@apply sd-hint;
+}
+
+.hint__model {
+	@apply mt-1 block text-faint;
+}
+
+.error {
+	@apply sd-error;
+}
+
+.log {
+	@apply m-0 flex max-h-[40dvh] min-h-[80px] list-none flex-col gap-2 overflow-auto p-0;
+}
+
+.turn {
+	@apply max-w-[88%] rounded-sd-lg bg-bg px-3 py-2 text-[14px] leading-snug whitespace-pre-wrap;
+}
+
+.turn[data-role='user'] {
+	@apply self-end bg-accent text-accent-text;
+}
+
+.turn--busy {
+	@apply text-muted;
+}
+
+.turn--suggestions {
+	@apply flex max-w-full flex-wrap gap-2 bg-transparent p-0;
+}
+
+.chip {
+	@apply sd-chip;
+}
+
+.plan {
+	@apply flex flex-col gap-2 rounded-sd-lg bg-bg p-3;
+}
+
+.plan__title {
+	@apply m-0 flex flex-wrap items-baseline gap-2 text-[15px];
+	@apply sd-heading;
+}
+
+.plan__apps {
+	@apply text-[12px] font-normal text-accent-soft;
+}
+
+.plan__grid {
+	@apply grid gap-2;
+	@apply sd-grid-fill-[84px];
+}
+
+.row {
+	@apply flex flex-wrap gap-2;
+}
+
+.primary {
+	@apply sd-btn-primary px-3.5 py-2.5;
+}
+
+.secondary {
+	@apply sd-btn-secondary px-3.5 py-2.5;
+}
+
+.composer {
+	@apply flex gap-2;
+}
+
+.composer input {
+	@apply sd-input min-w-0 flex-1;
+}
+
+.composer__send {
+	@apply grid size-11 shrink-0 place-items-center p-0 text-[20px];
+}
+
+.composer__send:disabled {
+	@apply opacity-40;
+}

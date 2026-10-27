@@ -1,0 +1,87 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply block;
+}
+
+.preview {
+	@apply mb-4 grid gap-2 rounded-sd-lg p-3;
+	@apply sd-grid-fill-[56px];
+	@apply bg-bg;
+}
+
+.field {
+	@apply mb-2.5 flex flex-col gap-1 text-[13px] text-muted;
+}
+
+input[type='text'] {
+	@apply sd-input;
+}
+
+.section {
+	@apply mt-[18px] mb-1.5 sd-section;
+}
+
+.hint {
+	@apply m-0 mb-2 text-[13px] text-faint;
+}
+
+.colors {
+	@apply m-0 flex list-none flex-col gap-1.5 p-0;
+}
+
+.color,
+.tint {
+	@apply flex items-center gap-2.5 rounded-sd bg-bg px-2 py-1.5 text-[14px];
+}
+
+.color input,
+.tint input {
+	@apply h-8 w-11 rounded-sd border border-border bg-transparent p-0;
+}
+
+.color__hex {
+	@apply flex-1 font-mono text-[13px] text-muted;
+}
+
+.color__remove {
+	@apply grid size-[30px] place-items-center rounded-sd border-0 bg-transparent text-[15px] text-danger-text;
+}
+
+.color__remove:disabled {
+	@apply opacity-30;
+}
+
+.add,
+.clear {
+	@apply mt-2 inline-flex items-center gap-1.5 rounded-sd border-0 bg-surface-2 px-3 py-2 text-[13px] text-text;
+	@apply font-[inherit];
+}
+
+.clear {
+	@apply m-0 text-danger-text;
+}
+
+.tint span {
+	@apply flex-1;
+}
+
+.footer {
+	@apply mt-5 flex gap-2;
+}
+
+.footer > * {
+	@apply flex-1;
+}
+
+.primary {
+	@apply sd-btn-primary;
+}
+
+.primary:disabled {
+	@apply opacity-50;
+}
+
+.secondary {
+	@apply sd-btn-secondary;
+}

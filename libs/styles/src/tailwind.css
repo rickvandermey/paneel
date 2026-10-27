@@ -1,0 +1,142 @@
+/*
+ * Tailwind entry shared by both apps. The deck's design tokens (themes.css) stay plain CSS
+ * variables so themes switch at runtime; this file exposes them to Tailwind as utilities such as
+ * bg-surface, text-muted, rounded-sd and shadow-sd. Component stylesheets that use @apply must
+ * `@reference` this file.
+ */
+@import 'tailwindcss' source(none);
+@import './themes.css';
+
+@theme inline {
+	--color-bg: var(--sd-bg);
+	--color-surface: var(--sd-surface);
+	--color-surface-2: var(--sd-surface-2);
+	--color-border: var(--sd-border);
+	--color-text: var(--sd-text);
+	--color-muted: var(--sd-text-muted);
+	--color-faint: var(--sd-text-faint);
+	--color-accent: var(--sd-accent);
+	--color-accent-text: var(--sd-accent-text);
+	--color-accent-soft: var(--sd-accent-soft);
+	--color-success: var(--sd-success);
+	--color-warning: var(--sd-warning);
+	--color-danger: var(--sd-danger);
+	--color-danger-text: var(--sd-danger-text);
+	--color-overlay: var(--sd-overlay);
+	--radius-sd: var(--sd-radius);
+	--radius-sd-lg: var(--sd-radius-lg);
+	--radius-pill: var(--sd-radius-pill);
+	--shadow-sd: var(--sd-shadow);
+	--font-sd: var(--sd-font);
+}
+
+@layer base {
+	html,
+	body {
+		@apply m-0 bg-bg font-sd text-text;
+		background-image: var(--sd-bg-image, none);
+	}
+}
+
+/*
+ * Recurring patterns of the editor panels as utilities, so components `@apply` one name
+ * instead of repeating a dozen declarations. They are also usable straight in templates.
+ */
+
+/* 16px keeps iOS Safari from zooming into the field when it gets the focus. */
+@utility sd-input {
+	@apply w-full rounded-sd border border-border bg-bg px-3 py-2.5 text-text;
+	font: inherit;
+	font-size: 16px;
+}
+
+@utility sd-hint {
+	@apply m-0 text-[13px] text-muted;
+}
+
+@utility sd-section {
+	@apply text-[13px] font-semibold tracking-[0.06em] text-muted uppercase;
+}
+
+@utility sd-group-label {
+	@apply text-[12px] font-semibold tracking-[0.06em] text-faint uppercase;
+}
+
+/* The shape every button shares; the three variants only pick their colors. */
+@utility sd-btn {
+	@apply inline-flex items-center justify-center gap-1.5 rounded-sd border-0 px-3.5 py-[11px] font-semibold;
+	font-family: inherit;
+	font-size: inherit;
+}
+
+@utility sd-btn-primary {
+	@apply sd-btn bg-accent text-accent-text;
+}
+
+@utility sd-btn-secondary {
+	@apply sd-btn bg-surface-2 text-text;
+}
+
+@utility sd-btn-danger {
+	@apply sd-btn bg-danger text-danger-text;
+}
+
+@utility sd-icon-button {
+	@apply grid size-8 place-items-center rounded-sd border-0 bg-surface-2 text-[16px] text-text;
+}
+
+@utility sd-chip {
+	@apply inline-flex items-center gap-1.5 rounded-pill border border-border bg-transparent px-[11px] py-[7px] text-[13px] text-text;
+	font-family: inherit;
+}
+
+@utility sd-back-link {
+	@apply inline-flex items-center gap-1.5 border-0 bg-transparent py-1.5 text-accent-soft;
+	font: inherit;
+}
+
+@utility sd-error {
+	@apply m-0 mb-2.5 rounded-sd bg-danger px-3 py-2 text-[13px] text-danger-text;
+}
+
+/* Names and titles follow the theme's heading weight and case. */
+@utility sd-heading {
+	font-weight: var(--sd-heading-weight);
+	text-transform: var(--sd-heading-transform);
+}
+
+@utility sd-font-inherit {
+	font: inherit;
+}
+
+/* Glass themes give panels a hairline border and a blur; flat themes resolve these to nothing. */
+@utility sd-surface-border {
+	border: var(--sd-surface-border);
+}
+
+@utility sd-glass-blur {
+	backdrop-filter: var(--sd-surface-blur);
+	-webkit-backdrop-filter: var(--sd-surface-blur);
+}
+
+/* Background color plus the theme's optional light image, for cards previewing a theme. */
+@utility sd-themed-bg {
+	background: var(--sd-bg-image, none) var(--sd-bg);
+}
+
+/* Responsive grid of equal columns at least the given width: sd-grid-fill-[84px]. */
+@utility sd-grid-fill-* {
+	grid-template-columns: repeat(auto-fill, minmax(--value([length]), 1fr));
+}
+
+/* Native selects drop the browser chrome and get a chevron inset like the text. */
+@utility sd-select {
+	appearance: none;
+	-webkit-appearance: none;
+	padding-right: 42px;
+	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b93a1' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+	background-repeat: no-repeat;
+	background-position: right 14px center;
+	background-size: 14px;
+	text-overflow: ellipsis;
+}

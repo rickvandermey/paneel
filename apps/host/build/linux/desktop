@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=Paneel
+Comment=Your phone as a control panel for your desk
+# The Exec line includes %u to pass the URL to the application
+Exec=/usr/local/bin/paneel %u
+Terminal=false
+Type=Application
+Icon=paneel
+Categories=Utility;
+StartupWMClass=paneel
+
+ 

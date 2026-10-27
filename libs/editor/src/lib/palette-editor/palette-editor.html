@@ -1,0 +1,68 @@
+<div class="preview" [style.background]="previewTint()">
+	@for (key of previewKeys(); track key.id) {
+		<sd-deck-key [button]="key" />
+	}
+</div>
+
+<label class="field">
+	<span>Name</span>
+	<input
+		type="text"
+		placeholder="My palette"
+		[ngModel]="name()"
+		(ngModelChange)="name.set($event)"
+		name="paletteName"
+	/>
+</label>
+
+<h3 class="section">Colors</h3>
+<p class="hint">Handed out in this order to new buttons on the page.</p>
+<ol class="colors">
+	@for (color of colors(); track $index; let i = $index) {
+		<li class="color">
+			<input
+				type="color"
+				[ngModel]="color"
+				(ngModelChange)="setColor(i, $event)"
+				[name]="'color' + i"
+				[attr.aria-label]="'Color ' + (i + 1)"
+			/>
+			<span class="color__hex">{{ color }}</span>
+			<button
+				type="button"
+				class="color__remove"
+				aria-label="Remove color"
+				[disabled]="colors().length < 2"
+				(click)="removeColor(i)"
+			>
+				<i class="ph ph-x" aria-hidden="true"></i>
+			</button>
+		</li>
+	}
+</ol>
+@if (colors().length < maxColors) {
+	<button type="button" class="add" (click)="addColor()">
+		<i class="ph ph-plus" aria-hidden="true"></i> Add color
+	</button>
+}
+
+<h3 class="section">Page tint</h3>
+<label class="tint">
+	<input
+		type="color"
+		[ngModel]="tint() || '#000000'"
+		(ngModelChange)="tint.set($event)"
+		name="tint"
+	/>
+	<span>{{ tint() ? 'Faint glow behind the deck' : 'No tint' }}</span>
+	@if (tint()) {
+		<button type="button" class="clear" (click)="tint.set('')">Remove</button>
+	}
+</label>
+
+<footer class="footer">
+	<button type="button" class="secondary" (click)="cancelled.emit()">Cancel</button>
+	<button type="button" class="primary" [disabled]="!valid()" (click)="save()">
+		{{ palette() ? 'Save palette' : 'Create palette' }}
+	</button>
+</footer>

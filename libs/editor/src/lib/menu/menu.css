@@ -1,0 +1,66 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply fixed inset-0 z-20;
+}
+
+.backdrop {
+	@apply absolute inset-0 border-0 bg-overlay p-0;
+}
+
+.drawer {
+	@apply absolute top-0 bottom-0 left-0 flex flex-col overflow-y-auto bg-surface px-2 font-sd shadow-sd;
+	@apply w-[min(320px,85vw)] pt-[calc(8px+env(safe-area-inset-top))] pb-[calc(8px+env(safe-area-inset-bottom))];
+	border-right: var(--sd-surface-border);
+	@apply sd-glass-blur;
+}
+
+.drawer__header {
+	@apply flex items-center gap-2.5 px-2.5 pt-2 pb-3.5;
+}
+
+.drawer__status {
+	@apply size-2.5 rounded-full bg-warning;
+}
+
+.drawer__status[data-status='connected'] {
+	@apply bg-success;
+}
+
+.drawer__host {
+	@apply flex-1 truncate text-[14px] text-muted;
+}
+
+.drawer__close {
+	@apply grid size-9 place-items-center rounded-full border-0 bg-surface-2 text-[18px] text-text;
+}
+
+.drawer__section {
+	@apply mx-2.5 mt-[18px] mb-1.5 sd-group-label;
+}
+
+.item {
+	@apply flex w-full items-center gap-3 rounded-sd border-0 bg-transparent px-2.5 py-3 text-left text-[16px] text-text;
+	@apply font-[inherit];
+}
+
+.item:active,
+.item--active {
+	@apply bg-surface-2;
+}
+
+.item i {
+	@apply text-[22px] text-muted;
+}
+
+.item--active i {
+	@apply text-accent-soft;
+}
+
+.item__emoji {
+	@apply w-[22px] text-center text-[18px];
+}
+
+.item__count {
+	@apply ml-auto text-[13px] text-faint;
+}

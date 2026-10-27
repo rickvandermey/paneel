@@ -1,0 +1,33 @@
+<h2>AI page builder</h2>
+@if (hostStatus.assistantStatus(); as assistant) {
+	<p class="muted">
+		{{ assistant.provider }} · {{ assistant.model }} ·
+		{{ assistant.configured ? 'key set' : 'no key yet' }}
+	</p>
+}
+<p class="muted">
+	The key stays on this computer; the phone only hears that it exists. Leave the field empty and
+	save to remove a key.
+</p>
+<form class="api-key-form" (submit)="$event.preventDefault(); saveApiKey()">
+	<select
+		name="apiKeyProvider"
+		[ngModel]="apiKeyProvider()"
+		(ngModelChange)="apiKeyProvider.set($event)"
+	>
+		<option value="anthropic">Anthropic</option>
+		<option value="openai">OpenAI-compatible</option>
+	</select>
+	<input
+		type="password"
+		name="apiKeyDraft"
+		autocomplete="off"
+		placeholder="API key"
+		[ngModel]="apiKeyDraft()"
+		(ngModelChange)="apiKeyDraft.set($event)"
+	/>
+	<button type="submit">Save key</button>
+</form>
+@if (apiKeyNotice()) {
+	<p class="muted">{{ apiKeyNotice() }}</p>
+}

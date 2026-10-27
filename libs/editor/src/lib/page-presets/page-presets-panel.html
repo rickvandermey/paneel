@@ -1,0 +1,68 @@
+<input
+	type="search"
+	class="search"
+	autocapitalize="off"
+	placeholder="Search presets, e.g. Spotify"
+	[ngModel]="query()"
+	(ngModelChange)="query.set($event)"
+	name="presetQuery"
+/>
+
+@if (ranked().recommended.length > 0) {
+	<h4 class="group">Recommended for this computer</h4>
+	<p class="hint">Based on the apps installed on the host.</p>
+	@for (entry of ranked().recommended; track entry.preset.id) {
+		<button
+			type="button"
+			class="card"
+			(click)="presetChosen.emit({ preset: entry.preset, installed: entry.installed })"
+		>
+			<i [class]="'card__icon ' + iconClass(entry.preset)" aria-hidden="true"></i>
+			<span class="card__text">
+				<span class="card__name">{{ entry.preset.name }}</span>
+				<span class="card__description">{{ entry.preset.description }}</span>
+				<span class="card__apps">Found: {{ entry.installed.join(', ') }}</span>
+			</span>
+			<i class="card__add ph ph-plus" aria-hidden="true"></i>
+		</button>
+	}
+}
+@if (installedApps() === null) {
+	<p class="hint">Checking which apps are installed…</p>
+}
+
+<h4 class="group">
+	{{ ranked().recommended.length > 0 ? 'More presets' : 'Presets' }}
+</h4>
+@for (entry of ranked().others; track entry.preset.id) {
+	<button
+		type="button"
+		class="card"
+		(click)="presetChosen.emit({ preset: entry.preset, installed: entry.installed })"
+	>
+		<i [class]="'card__icon ' + iconClass(entry.preset)" aria-hidden="true"></i>
+		<span class="card__text">
+			<span class="card__name">{{ entry.preset.name }}</span>
+			<span class="card__description">{{ entry.preset.description }}</span>
+		</span>
+		<i class="card__add ph ph-plus" aria-hidden="true"></i>
+	</button>
+} @empty {
+	@if (ranked().recommended.length === 0) {
+		<p class="hint">No preset matches.</p>
+	}
+}
+
+<h4 class="group">Blank page</h4>
+<form class="blank" (submit)="$event.preventDefault(); createBlank()">
+	<input
+		type="text"
+		placeholder="Name, e.g. Streaming"
+		[ngModel]="blankName()"
+		(ngModelChange)="blankName.set($event)"
+		name="blankName"
+	/>
+	<button type="submit" class="primary" [disabled]="!blankName().trim()">
+		<i class="ph ph-plus" aria-hidden="true"></i> Add empty page
+	</button>
+</form>

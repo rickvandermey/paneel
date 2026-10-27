@@ -1,0 +1,120 @@
+<p class="hint">
+	New buttons on <strong>{{ pageName() }}</strong> take the next color of the palette; the page
+	gets a matching tint. Saved with the page.
+</p>
+<div class="recolor" [class.recolor--fresh]="justSelected()">
+	@if (activePaletteId() === noPalette) {
+		<span class="recolor__text">
+			<strong>No palette yet.</strong> Pick one below; new buttons use it, and you can recolor
+			the existing {{ buttons().length }} buttons afterwards.
+		</span>
+	} @else {
+		<span class="recolor__text">
+			<strong>{{ activePaletteName() }}</strong> is the page palette. Existing buttons keep
+			their colors until you recolor them.
+		</span>
+		@if (buttons().length > 0) {
+			<div class="recolor__preview" aria-label="Preview of the first buttons">
+				@for (key of previewKeys(); track key.id) {
+					<sd-deck-key [button]="key" [assetUrl]="assetUrl()" />
+				}
+			</div>
+			<div class="recolor__actions">
+				<button
+					type="button"
+					class="recolor__button"
+					[disabled]="changedCount() === 0"
+					(click)="recolorRequested.emit()"
+				>
+					<i class="ph ph-paint-bucket" aria-hidden="true"></i>
+					{{
+						changedCount() === 0
+							? 'Already in these colors'
+							: 'Apply to ' + changedCount() + ' buttons'
+					}}
+				</button>
+				@if (canUndo()) {
+					<button type="button" class="recolor__undo" (click)="undoRequested.emit()">
+						<i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i> Undo
+					</button>
+				}
+			</div>
+		} @else {
+			<span class="recolor__text">This page has no buttons yet.</span>
+		}
+	}
+</div>
+@for (group of groups; track group.name) {
+	<h4 class="group">{{ group.name }}</h4>
+	@for (palette of group.palettes; track palette.id) {
+		<button
+			type="button"
+			class="card"
+			[class.card--active]="palette.id === activePaletteId()"
+			(click)="choose(palette.id)"
+		>
+			<span class="card__dots">
+				@for (color of palette.colors; track $index) {
+					<span class="dot" [style.background]="color"></span>
+				} @empty {
+					<i class="ph ph-prohibit" aria-hidden="true"></i>
+				}
+			</span>
+			<span class="card__text">
+				<span class="card__name">{{ palette.name }}</span>
+				<span class="card__description">{{ palette.description }}</span>
+			</span>
+			@if (palette.id === activePaletteId()) {
+				<i class="card__check ph-bold ph-check" aria-hidden="true"></i>
+			}
+		</button>
+	}
+}
+
+<h4 class="group">Custom</h4>
+@for (palette of customPalettes(); track palette.id) {
+	<div class="card card--custom" [class.card--active]="palette.id === activePaletteId()">
+		<button type="button" class="card__select" (click)="choose(palette.id)">
+			<span class="card__dots">
+				@for (color of palette.colors; track $index) {
+					<span class="dot" [style.background]="color"></span>
+				}
+			</span>
+			<span class="card__text">
+				<span class="card__name">{{ palette.name }}</span>
+				<span class="card__description">{{ palette.colors.length }} colors</span>
+			</span>
+			@if (palette.id === activePaletteId()) {
+				<i class="card__check ph-bold ph-check" aria-hidden="true"></i>
+			}
+		</button>
+		<span class="card__tools">
+			<button
+				type="button"
+				class="tool"
+				aria-label="Edit palette"
+				(click)="editRequested.emit(palette)"
+			>
+				<i class="ph ph-pencil-simple" aria-hidden="true"></i>
+			</button>
+			<button
+				type="button"
+				class="tool tool--danger"
+				[attr.aria-label]="
+					confirmingDeleteId() === palette.id ? 'Confirm delete' : 'Delete palette'
+				"
+				(click)="requestDelete(palette)"
+			>
+				<i
+					[class]="confirmingDeleteId() === palette.id ? 'ph ph-check' : 'ph ph-trash'"
+					aria-hidden="true"
+				></i>
+			</button>
+		</span>
+	</div>
+} @empty {
+	<p class="hint">No custom palettes yet.</p>
+}
+<button type="button" class="create" (click)="createRequested.emit()">
+	<i class="ph ph-plus" aria-hidden="true"></i> Create your own palette
+</button>

@@ -1,0 +1,365 @@
+/*
+ * Theme tokens. Every component reads these; a theme only redefines them. The selectors also
+ * match a nested [data-theme] so the theme picker can preview a card in another theme.
+ */
+
+:root,
+[data-theme='midnight'] {
+	--sd-font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--sd-key-font: var(--sd-font);
+	--sd-key-label-weight: 600;
+	--sd-heading-weight: 700;
+	--sd-heading-transform: none;
+	--sd-bg: #111827;
+	--sd-surface: #1f2937;
+	--sd-surface-2: #374151;
+	--sd-border: #4b5563;
+	--sd-text: #f9fafb;
+	--sd-text-muted: #9ca3af;
+	--sd-text-faint: #6b7280;
+	--sd-accent: #2563eb;
+	--sd-accent-text: #ffffff;
+	--sd-accent-soft: #93c5fd;
+	--sd-success: #16a34a;
+	--sd-warning: #92400e;
+	--sd-danger: #7f1d1d;
+	--sd-danger-text: #fecaca;
+	--sd-overlay: rgb(0 0 0 / 0.55);
+	--sd-shadow: 0 8px 32px rgb(0 0 0 / 0.4);
+	--sd-radius: 10px;
+	--sd-radius-lg: 18px;
+	--sd-radius-pill: 999px;
+	--sd-key-radius: 18%;
+	--sd-key-gloss: none;
+	--sd-key-shadow: none;
+	--sd-key-border: 0;
+	--sd-key-active-filter: brightness(1.2);
+}
+
+/*
+ * Glass tokens: an image behind everything, translucent surfaces with blur, see-through keys.
+ * Every themed element resets them, so a custom theme's inline values on <html> do not leak
+ * into the preview cards of the built-in themes. Glass themes override them below.
+ */
+:root,
+[data-theme] {
+	--sd-bg-image: none;
+	--sd-surface-blur: none;
+	--sd-surface-border: 1px solid transparent;
+	--sd-key-mix: 100%;
+	--sd-key-blur: none;
+}
+
+/* Glass over deep plum: magenta and aqua light behind frosted panels and see-through pills. */
+[data-theme='magenta'] {
+	--sd-font: 'Avenir Next', 'Helvetica Neue', 'Segoe UI', system-ui, sans-serif;
+	--sd-key-font: var(--sd-font);
+	--sd-key-label-weight: 800;
+	--sd-heading-weight: 800;
+	--sd-heading-transform: uppercase;
+	--sd-bg: #2a0030;
+	--sd-bg-image:
+		radial-gradient(60% 45% at 15% 5%, rgb(255 0 255 / 0.38), transparent 65%),
+		radial-gradient(50% 40% at 90% 95%, rgb(51 248 255 / 0.28), transparent 65%),
+		radial-gradient(40% 30% at 70% 30%, rgb(187 255 51 / 0.12), transparent 60%);
+	--sd-surface: rgb(255 255 255 / 0.08);
+	--sd-surface-2: rgb(255 255 255 / 0.14);
+	--sd-surface-blur: blur(18px) saturate(1.4);
+	--sd-surface-border: 1px solid rgb(255 255 255 / 0.18);
+	--sd-border: rgb(255 255 255 / 0.28);
+	--sd-text: #ffffff;
+	--sd-text-muted: #ffffffc2;
+	--sd-text-faint: #ffffff8c;
+	--sd-accent: #ff00ff;
+	--sd-accent-text: #300033;
+	--sd-accent-soft: #33f8ff;
+	--sd-success: #bbff33;
+	--sd-warning: #ff80fe;
+	--sd-danger: rgb(255 80 140 / 0.25);
+	--sd-danger-text: #ffb3d9;
+	--sd-overlay: rgb(30 0 40 / 0.5);
+	--sd-shadow: 0 16px 48px rgb(0 0 0 / 0.45);
+	--sd-radius: 999px;
+	--sd-radius-lg: 28px;
+	--sd-radius-pill: 999px;
+	--sd-key-radius: 30%;
+	--sd-key-mix: 90%;
+	--sd-key-blur: none;
+	--sd-key-gloss: linear-gradient(rgb(255 255 255 / 0.1), transparent 55%);
+	--sd-key-shadow: 0 0 0 1px rgb(255 255 255 / 0.22) inset, 0 8px 24px rgb(0 0 0 / 0.3);
+	--sd-key-border: 0;
+	--sd-key-active-filter: saturate(1.4) brightness(1.15);
+}
+
+/* Warm light theme with paper-like surfaces and soft shadows. */
+[data-theme='paper'] {
+	--sd-font: 'Iowan Old Style', 'Palatino Linotype', Georgia, 'Segoe UI', system-ui, serif;
+	--sd-key-font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--sd-key-label-weight: 600;
+	--sd-heading-weight: 700;
+	--sd-heading-transform: none;
+	--sd-bg: #f3eee6;
+	--sd-surface: #fffdf9;
+	--sd-surface-2: #e9e2d6;
+	--sd-border: #d2c8b8;
+	--sd-text: #1f1b16;
+	--sd-text-muted: #6b6257;
+	--sd-text-faint: #9a9085;
+	--sd-accent: #c2410c;
+	--sd-accent-text: #ffffff;
+	--sd-accent-soft: #9a3412;
+	--sd-success: #3f6212;
+	--sd-warning: #b45309;
+	--sd-danger: #fee2e2;
+	--sd-danger-text: #991b1b;
+	--sd-overlay: rgb(60 45 30 / 0.4);
+	--sd-shadow: 0 10px 30px rgb(60 45 30 / 0.2);
+	--sd-radius: 12px;
+	--sd-radius-lg: 20px;
+	--sd-radius-pill: 999px;
+	--sd-key-radius: 28%;
+	--sd-key-gloss: linear-gradient(rgb(255 255 255 / 0.14), transparent 60%);
+	--sd-key-shadow: 0 6px 14px rgb(60 45 30 / 0.22), 0 1px 2px rgb(60 45 30 / 0.2);
+	--sd-key-border: 0;
+	--sd-key-active-filter: brightness(0.95);
+}
+
+/* Glass over black: cyan and violet glow behind smoked panels and keys with lit edges. */
+[data-theme='neon'] {
+	--sd-font: 'SF Pro Display', 'Segoe UI Variable', system-ui, sans-serif;
+	--sd-key-font: var(--sd-font);
+	--sd-key-label-weight: 500;
+	--sd-heading-weight: 600;
+	--sd-heading-transform: uppercase;
+	--sd-bg: #050507;
+	--sd-bg-image:
+		radial-gradient(55% 40% at 85% 0%, rgb(34 211 238 / 0.28), transparent 65%),
+		radial-gradient(60% 45% at 5% 100%, rgb(168 85 247 / 0.26), transparent 65%);
+	--sd-surface: rgb(255 255 255 / 0.06);
+	--sd-surface-2: rgb(255 255 255 / 0.12);
+	--sd-surface-blur: blur(20px) saturate(1.3);
+	--sd-surface-border: 1px solid rgb(255 255 255 / 0.14);
+	--sd-border: rgb(255 255 255 / 0.22);
+	--sd-text: #eafcff;
+	--sd-text-muted: #9fc3cb;
+	--sd-text-faint: #64818a;
+	--sd-accent: #22d3ee;
+	--sd-accent-text: #04161a;
+	--sd-accent-soft: #67e8f9;
+	--sd-success: #34d399;
+	--sd-warning: #f59e0b;
+	--sd-danger: rgb(244 63 94 / 0.22);
+	--sd-danger-text: #fda4af;
+	--sd-overlay: rgb(0 0 0 / 0.5);
+	--sd-shadow: 0 0 40px rgb(34 211 238 / 0.18);
+	--sd-radius: 8px;
+	--sd-radius-lg: 14px;
+	--sd-radius-pill: 8px;
+	--sd-key-radius: 16%;
+	--sd-key-mix: 62%;
+	--sd-key-blur: blur(10px);
+	--sd-key-gloss: linear-gradient(160deg, rgb(255 255 255 / 0.18), transparent 55%);
+	--sd-key-shadow: 0 0 0 1px rgb(255 255 255 / 0.22) inset, 0 0 22px rgb(34 211 238 / 0.22);
+	--sd-key-border: 0;
+	--sd-key-active-filter: brightness(1.35) drop-shadow(0 0 12px #22d3ee);
+}
+
+/* Charcoal with bevelled keys and monospace labels, like a physical deck. */
+[data-theme='hardware'] {
+	--sd-font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--sd-key-font: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+	--sd-key-label-weight: 600;
+	--sd-heading-weight: 700;
+	--sd-heading-transform: uppercase;
+	--sd-bg: #141414;
+	--sd-surface: #1e1e1e;
+	--sd-surface-2: #2c2c2c;
+	--sd-border: #3d3d3d;
+	--sd-text: #f0ece4;
+	--sd-text-muted: #a8a39b;
+	--sd-text-faint: #6e6a63;
+	--sd-accent: #f59e0b;
+	--sd-accent-text: #1a1206;
+	--sd-accent-soft: #fbbf24;
+	--sd-success: #4ade80;
+	--sd-warning: #b45309;
+	--sd-danger: #4a1515;
+	--sd-danger-text: #fca5a5;
+	--sd-overlay: rgb(0 0 0 / 0.65);
+	--sd-shadow: 0 10px 30px rgb(0 0 0 / 0.6);
+	--sd-radius: 6px;
+	--sd-radius-lg: 10px;
+	--sd-radius-pill: 6px;
+	--sd-key-radius: 8%;
+	--sd-key-gloss: linear-gradient(rgb(255 255 255 / 0.12), transparent 45%, rgb(0 0 0 / 0.25));
+	--sd-key-shadow:
+		0 2px 0 rgb(255 255 255 / 0.1) inset, 0 -3px 0 rgb(0 0 0 / 0.35) inset,
+		0 4px 10px rgb(0 0 0 / 0.5);
+	--sd-key-border: 1px solid rgb(0 0 0 / 0.5);
+	--sd-key-active-filter: brightness(0.85);
+}
+
+/* Neutral dark gray with a quiet steel accent. */
+[data-theme='graphite'] {
+	--sd-font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--sd-key-font: var(--sd-font);
+	--sd-key-label-weight: 600;
+	--sd-heading-weight: 600;
+	--sd-heading-transform: none;
+	--sd-bg: #1c1c1e;
+	--sd-surface: #2c2c2e;
+	--sd-surface-2: #3a3a3c;
+	--sd-border: #48484a;
+	--sd-text: #f5f5f7;
+	--sd-text-muted: #a1a1a6;
+	--sd-text-faint: #6e6e73;
+	--sd-accent: #8e9aaf;
+	--sd-accent-text: #121214;
+	--sd-accent-soft: #c7d0dd;
+	--sd-success: #30d158;
+	--sd-warning: #ff9f0a;
+	--sd-danger: #3b1d1d;
+	--sd-danger-text: #ff8a80;
+	--sd-overlay: rgb(0 0 0 / 0.6);
+	--sd-shadow: 0 10px 30px rgb(0 0 0 / 0.5);
+	--sd-radius: 12px;
+	--sd-radius-lg: 20px;
+	--sd-radius-pill: 999px;
+	--sd-key-radius: 24%;
+	--sd-key-gloss: linear-gradient(rgb(255 255 255 / 0.05), transparent 55%);
+	--sd-key-shadow: 0 1px 0 rgb(255 255 255 / 0.06) inset;
+	--sd-key-border: 0;
+	--sd-key-active-filter: brightness(1.15);
+}
+
+/* Clean light theme with cool grays and a blue accent. */
+[data-theme='daylight'] {
+	--sd-font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--sd-key-font: var(--sd-font);
+	--sd-key-label-weight: 600;
+	--sd-heading-weight: 600;
+	--sd-heading-transform: none;
+	--sd-bg: #f1f5f9;
+	--sd-surface: #ffffff;
+	--sd-surface-2: #e2e8f0;
+	--sd-border: #cbd5e1;
+	--sd-text: #0f172a;
+	--sd-text-muted: #475569;
+	--sd-text-faint: #94a3b8;
+	--sd-accent: #2563eb;
+	--sd-accent-text: #ffffff;
+	--sd-accent-soft: #1d4ed8;
+	--sd-success: #15803d;
+	--sd-warning: #b45309;
+	--sd-danger: #fee2e2;
+	--sd-danger-text: #b91c1c;
+	--sd-overlay: rgb(15 23 42 / 0.35);
+	--sd-shadow: 0 12px 32px rgb(15 23 42 / 0.16);
+	--sd-radius: 10px;
+	--sd-radius-lg: 16px;
+	--sd-radius-pill: 999px;
+	--sd-key-radius: 20%;
+	--sd-key-gloss: none;
+	--sd-key-shadow: 0 2px 6px rgb(15 23 42 / 0.16), 0 0 0 1px rgb(15 23 42 / 0.06);
+	--sd-key-border: 0;
+	--sd-key-active-filter: brightness(0.94);
+}
+
+/* Warm brown-black with a copper accent. */
+[data-theme='espresso'] {
+	--sd-font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--sd-key-font: var(--sd-font);
+	--sd-key-label-weight: 600;
+	--sd-heading-weight: 700;
+	--sd-heading-transform: none;
+	--sd-bg: #1a1512;
+	--sd-surface: #26201b;
+	--sd-surface-2: #362e27;
+	--sd-border: #4a3f36;
+	--sd-text: #f5efe8;
+	--sd-text-muted: #b8aa9c;
+	--sd-text-faint: #7d7065;
+	--sd-accent: #c08457;
+	--sd-accent-text: #1a1512;
+	--sd-accent-soft: #e2b48c;
+	--sd-success: #86b37a;
+	--sd-warning: #d08c3a;
+	--sd-danger: #45201c;
+	--sd-danger-text: #f2a79c;
+	--sd-overlay: rgb(10 7 5 / 0.65);
+	--sd-shadow: 0 10px 30px rgb(0 0 0 / 0.5);
+	--sd-radius: 12px;
+	--sd-radius-lg: 20px;
+	--sd-radius-pill: 999px;
+	--sd-key-radius: 24%;
+	--sd-key-gloss: linear-gradient(rgb(255 240 220 / 0.07), transparent 60%);
+	--sd-key-shadow: 0 4px 12px rgb(0 0 0 / 0.4);
+	--sd-key-border: 0;
+	--sd-key-active-filter: brightness(1.15);
+}
+
+/* Dark green-black with a sage accent. */
+[data-theme='moss'] {
+	--sd-font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--sd-key-font: var(--sd-font);
+	--sd-key-label-weight: 600;
+	--sd-heading-weight: 700;
+	--sd-heading-transform: none;
+	--sd-bg: #0c1410;
+	--sd-surface: #15211b;
+	--sd-surface-2: #223129;
+	--sd-border: #34493d;
+	--sd-text: #ecf3ee;
+	--sd-text-muted: #9bb3a4;
+	--sd-text-faint: #5f7868;
+	--sd-accent: #84a98c;
+	--sd-accent-text: #0c1410;
+	--sd-accent-soft: #b7d1bd;
+	--sd-success: #4ade80;
+	--sd-warning: #ca8a04;
+	--sd-danger: #3a1a1a;
+	--sd-danger-text: #fca5a5;
+	--sd-overlay: rgb(0 0 0 / 0.6);
+	--sd-shadow: 0 10px 30px rgb(0 0 0 / 0.5);
+	--sd-radius: 12px;
+	--sd-radius-lg: 20px;
+	--sd-radius-pill: 999px;
+	--sd-key-radius: 32%;
+	--sd-key-gloss: linear-gradient(rgb(255 255 255 / 0.06), transparent 60%);
+	--sd-key-shadow: 0 1px 0 rgb(255 255 255 / 0.05) inset;
+	--sd-key-border: 0;
+	--sd-key-active-filter: brightness(1.15);
+}
+
+/* Muted blue-gray with frost highlights. */
+[data-theme='arctic'] {
+	--sd-font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--sd-key-font: var(--sd-font);
+	--sd-key-label-weight: 600;
+	--sd-heading-weight: 700;
+	--sd-heading-transform: none;
+	--sd-bg: #2e3440;
+	--sd-surface: #3b4252;
+	--sd-surface-2: #434c5e;
+	--sd-border: #4c566a;
+	--sd-text: #eceff4;
+	--sd-text-muted: #d8dee9;
+	--sd-text-faint: #8f9bb3;
+	--sd-accent: #88c0d0;
+	--sd-accent-text: #2e3440;
+	--sd-accent-soft: #8fbcbb;
+	--sd-success: #a3be8c;
+	--sd-warning: #d08770;
+	--sd-danger: #4b2a30;
+	--sd-danger-text: #e8a0a8;
+	--sd-overlay: rgb(46 52 64 / 0.7);
+	--sd-shadow: 0 10px 30px rgb(0 0 0 / 0.4);
+	--sd-radius: 8px;
+	--sd-radius-lg: 14px;
+	--sd-radius-pill: 999px;
+	--sd-key-radius: 12%;
+	--sd-key-gloss: none;
+	--sd-key-shadow: 0 0 0 1px rgb(236 239 244 / 0.08) inset;
+	--sd-key-border: 0;
+	--sd-key-active-filter: brightness(1.15);
+}

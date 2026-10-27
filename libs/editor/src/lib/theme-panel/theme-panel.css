@@ -1,0 +1,78 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply block;
+}
+
+.hint {
+	@apply sd-hint mb-3;
+}
+
+.group {
+	@apply mt-3.5 mb-1.5 sd-group-label;
+}
+
+.group:first-of-type {
+	@apply mt-0;
+}
+
+.card {
+	@apply relative mb-2.5 flex w-full flex-wrap items-center gap-3.5 rounded-sd-lg border-2 border-transparent p-3 text-left font-sd text-text;
+	@apply sd-themed-bg;
+}
+
+.card--active {
+	@apply border-accent;
+}
+
+.card__keys {
+	@apply grid shrink-0 grid-cols-[repeat(3,44px)] gap-1.5 rounded-sd bg-surface p-2;
+}
+
+.card__text {
+	@apply flex min-w-0 flex-col gap-0.5;
+	@apply flex-[1_1_110px];
+}
+
+.card__name {
+	@apply text-[15px];
+	@apply sd-heading;
+}
+
+.card__description {
+	@apply text-[13px] text-muted;
+}
+
+/* Pinned to the corner so it never pushes the text to a new line on narrow screens. */
+.card__check {
+	@apply absolute top-2.5 right-3 text-[22px] text-accent;
+}
+
+.card--active .card__text {
+	@apply pr-7;
+}
+
+.card--custom {
+	@apply overflow-hidden p-0;
+}
+
+.card__select {
+	@apply relative flex min-w-0 flex-1 flex-wrap items-center gap-3.5 border-0 bg-transparent p-3 text-left text-inherit;
+	@apply sd-font-inherit;
+}
+
+.card__tools {
+	@apply flex flex-col gap-1 p-2;
+}
+
+.tool {
+	@apply grid size-[34px] place-items-center rounded-sd border-0 bg-surface-2 text-[16px] text-text;
+}
+
+.tool--danger {
+	@apply text-danger-text;
+}
+
+.create {
+	@apply mt-2 sd-btn-primary justify-start;
+}

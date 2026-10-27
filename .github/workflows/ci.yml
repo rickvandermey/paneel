@@ -1,0 +1,105 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+    workflow_dispatch:
+
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+env:
+    GO_VERSION: '1.27'
+
+jobs:
+    frontend:
+        name: 'frontend: lint, typecheck, test, build'
+        runs-on: ubuntu-24.04
+        timeout-minutes: 20
+        steps:
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: pnpm
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm nx run-many -t lint typecheck test build -p protocol host-client deck-ui editor mobile desktop
+
+    host-macos:
+        name: 'host: macOS build and package'
+        runs-on: macos-14
+        timeout-minutes: 30
+        steps:
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: pnpm
+            - uses: actions/setup-go@v5
+              with:
+                  go-version: ${{ env.GO_VERSION }}
+                  cache-dependency-path: apps/host/go.sum
+            - run: pnpm install --frozen-lockfile
+            - run: go install github.com/wailsapp/wails/v3/cmd/wails3@v3.0.0
+            - run: pnpm nx run-many -t lint test -p host
+            - run: pnpm nx package host
+            - uses: actions/upload-artifact@v4
+              with:
+                  name: paneel-macos
+                  path: apps/host/bin/*.app
+
+    host-windows:
+        # Unverified so far: robotgo needs cgo, so the runner's MinGW toolchain must be on PATH.
+        name: 'host: Windows build'
+        runs-on: windows-2022
+        timeout-minutes: 40
+        steps:
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: pnpm
+            - uses: actions/setup-go@v5
+              with:
+                  go-version: ${{ env.GO_VERSION }}
+                  cache-dependency-path: apps/host/go.sum
+            - run: pnpm install --frozen-lockfile
+            - run: go install github.com/wailsapp/wails/v3/cmd/wails3@v3.0.0
+            - run: pnpm nx test host
+            - run: pnpm nx build host
+            - uses: actions/upload-artifact@v4
+              with:
+                  name: paneel-windows
+                  path: apps/host/bin/*.exe
+
+    deck-e2e:
+        name: 'deck: end to end against a headless host'
+        runs-on: macos-14
+        timeout-minutes: 30
+        steps:
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: pnpm
+            - uses: actions/setup-go@v5
+              with:
+                  go-version: ${{ env.GO_VERSION }}
+                  cache-dependency-path: apps/host/go.sum
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm exec playwright install --with-deps chromium
+            - run: pnpm nx e2e deck-e2e
+            - uses: actions/upload-artifact@v4
+              if: failure()
+              with:
+                  name: deck-e2e-report
+                  path: dist/.playwright/apps/deck-e2e

@@ -1,0 +1,75 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply relative flex h-full min-h-0 flex-col bg-fixed font-sd text-text;
+	@apply sd-themed-bg;
+}
+
+.bar {
+	@apply flex items-center gap-2 px-3 py-2 text-[13px] text-muted;
+}
+
+.bar__menu {
+	@apply grid size-10 shrink-0 place-items-center rounded-sd border-0 bg-transparent text-[26px] text-text;
+}
+
+.chips {
+	@apply flex min-w-0 flex-1 gap-1.5 overflow-x-auto;
+	@apply [scrollbar-width:none];
+}
+
+.chips::-webkit-scrollbar {
+	@apply hidden;
+}
+
+.chip {
+	@apply shrink-0 rounded-pill border-0 bg-surface px-3 py-[7px] text-[13px] whitespace-nowrap text-muted;
+	@apply font-[inherit];
+	@apply sd-heading;
+}
+
+.chip--active {
+	@apply bg-accent text-accent-text;
+}
+
+.bar__done {
+	@apply inline-flex items-center gap-1 rounded-pill border-0 bg-success px-3 py-[7px] text-[13px] font-semibold text-accent-text;
+	@apply font-[inherit];
+}
+
+.bar__status {
+	@apply size-2.5 rounded-full bg-warning;
+}
+
+.bar__status[data-status='connected'] {
+	@apply bg-success;
+}
+
+.bar__metric--muted {
+	@apply text-faint;
+}
+
+.error {
+	@apply mx-3 rounded-sd bg-danger px-3 py-2 text-[13px] text-danger-text;
+}
+
+.deck {
+	@apply min-h-0 flex-1 px-3 pt-1 pb-[18px];
+}
+
+.deck--editing {
+	@apply rounded-[4px] outline-2 outline-offset-[-8px] outline-accent outline-dashed;
+}
+
+.empty {
+	@apply min-h-0 flex-1;
+}
+
+.toast {
+	@apply absolute bottom-6 left-1/2 z-40 flex max-w-[calc(100%-32px)] -translate-x-1/2 items-center gap-3 rounded-pill bg-bg px-4 py-2.5 text-[14px] text-text shadow-sd;
+}
+
+.toast__action {
+	@apply rounded-pill border-0 bg-accent px-3 py-1.5 font-semibold text-accent-text;
+	@apply font-[inherit];
+}

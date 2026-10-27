@@ -1,0 +1,15 @@
+{
+	"fixed": {
+		"file_version": "0.0.1"
+	},
+	"info": {
+		"0409": {
+			"ProductVersion": "0.0.1",
+			"CompanyName": "Rick van der Meij",
+			"FileDescription": "Your phone as a control panel for your desk",
+			"LegalCopyright": "(c) 2026, Rick van der Meij",
+			"ProductName": "Paneel",
+			"Comments": "Open source, MIT"
+		}
+	}
+}

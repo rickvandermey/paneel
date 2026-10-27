@@ -1,0 +1,21 @@
+# Add files here to ignore them from prettier formatting
+/dist
+/coverage
+/.nx/cache
+/.nx/workspace-data
+.angular
+.nx/self-healing
+
+# Generated
+apps/desktop/src/bindings
+apps/host/frontend/dist
+apps/host/static/deck
+apps/host/bin
+libs/editor/src/lib/icon-picker/phosphor-names.ts
+libs/editor/src/lib/icon-picker/simple-icons-names.ts
+
+# playwright-bdd generated specs must match bddgen output verbatim
+**/features-gen/**
+/test-reports
+/tmp
+/test-results

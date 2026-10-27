@@ -1,0 +1,101 @@
+@reference '../../../../styles/src/tailwind.css';
+
+/*
+ * A key sizes its contents in container query units (cqw), which Tailwind has no utilities for,
+ * and its look comes from per-theme key tokens; that part stays plain CSS on purpose.
+ */
+:host {
+	@apply relative flex aspect-square cursor-pointer touch-none flex-col items-center justify-center gap-[6%] overflow-hidden select-none;
+	border: var(--sd-key-border, 0);
+	border-radius: var(--sd-key-radius, 18%);
+	background:
+		var(--sd-key-gloss, none),
+		color-mix(in srgb, var(--key-color) var(--sd-key-mix, 100%), transparent);
+	color: var(--key-foreground);
+	box-shadow: var(--sd-key-shadow, none);
+	backdrop-filter: var(--sd-key-blur, none);
+	-webkit-backdrop-filter: var(--sd-key-blur, none);
+	font-family: var(--sd-key-font, inherit);
+	transition:
+		transform 80ms ease,
+		filter 80ms ease;
+	-webkit-tap-highlight-color: transparent;
+	container-type: size;
+}
+
+:host(:active),
+:host(.key--active) {
+	@apply scale-[0.94];
+	filter: var(--sd-key-active-filter, brightness(1.2));
+}
+
+.key__icon {
+	@apply grid place-items-center leading-none;
+	width: 55cqw;
+	height: 55cqw;
+	font-size: 44cqw;
+}
+
+.key__image {
+	@apply size-full rounded-[14%] object-contain;
+}
+
+.key__emoji {
+	font-size: 44cqw;
+}
+
+.key__initial {
+	@apply font-bold;
+	font-size: 40cqw;
+}
+
+.key__label {
+	@apply max-w-[90%] truncate text-center leading-[1.15];
+	font-size: 12cqw;
+	font-weight: var(--sd-key-label-weight, 600);
+}
+
+.key__folder {
+	@apply absolute top-[7%] right-[8%] opacity-85;
+	font-size: 14cqw;
+}
+
+:host(.key--dragging) {
+	@apply z-[2] scale-[1.08] opacity-85 shadow-sd;
+}
+
+:host(.key--drop-target) {
+	@apply outline-3 outline-offset-2 outline-accent;
+}
+
+/* Toggle indicator: a small lamp that lights up while the button is on. */
+.key__state {
+	@apply absolute top-[8%] right-[9%] rounded-full;
+	width: 9cqw;
+	height: 9cqw;
+	background: color-mix(in srgb, var(--key-foreground) 35%, transparent);
+}
+
+:host(.key--on) .key__state {
+	background: var(--key-foreground);
+	box-shadow: 0 0 8px var(--key-foreground);
+}
+
+:host(.key--folder) .key__state {
+	@apply hidden;
+}
+
+.key__edit {
+	@apply absolute top-[7%] left-[8%] opacity-85;
+	font-size: 14cqw;
+}
+
+:host(.key--editing) {
+	@apply outline-2 outline-offset-[-4px] outline-dashed;
+	outline-color: color-mix(in srgb, var(--sd-text) 45%, transparent);
+}
+
+:host(.key--special) {
+	@apply border-2 border-dashed bg-transparent text-muted;
+	border-color: color-mix(in srgb, var(--sd-text) 25%, transparent);
+}

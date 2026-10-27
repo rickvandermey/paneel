@@ -1,0 +1,27 @@
+<input
+	type="search"
+	class="search"
+	autocapitalize="off"
+	placeholder="Search buttons, e.g. mute, git, chrome"
+	[ngModel]="query()"
+	(ngModelChange)="query.set($event)"
+	name="catalogQuery"
+/>
+<p class="hint">Tap a button to add it to the current page. You can change it afterwards.</p>
+@for (group of groups(); track group.name) {
+	<section class="group">
+		<h3 class="group__name">{{ group.name }}</h3>
+		<p class="group__description">{{ group.description }}</p>
+		<div class="grid">
+			@for (preset of group.buttons; track preset.label; let i = $index) {
+				<sd-deck-key
+					[button]="preview(preset, i)"
+					[assetUrl]="assetUrl()"
+					(pressed)="added.emit(preset)"
+				/>
+			}
+		</div>
+	</section>
+} @empty {
+	<p class="hint">No button matches.</p>
+}

@@ -1,0 +1,79 @@
+<p class="hint">The theme is shared by the phone and the desktop app.</p>
+@for (group of groups; track group.name) {
+	<h4 class="group">{{ group.name }}</h4>
+	@for (theme of group.themes; track theme.id) {
+		<button
+			type="button"
+			class="card"
+			[attr.data-theme]="theme.id"
+			[class.card--active]="theme.id === activeTheme()"
+			(click)="selected.emit(theme.id)"
+		>
+			<span class="card__keys">
+				@for (sample of samples; track sample.id) {
+					<sd-deck-key [button]="sample" />
+				}
+			</span>
+			<span class="card__text">
+				<span class="card__name">{{ theme.name }}</span>
+				<span class="card__description">{{ theme.description }}</span>
+			</span>
+			@if (theme.id === activeTheme()) {
+				<i class="card__check ph-bold ph-check" aria-hidden="true"></i>
+			}
+		</button>
+	}
+}
+
+<h4 class="group">Custom</h4>
+@for (card of customCards(); track card.theme.id) {
+	<div
+		class="card card--custom"
+		[attr.data-theme]="card.base"
+		[attr.style]="card.style"
+		[class.card--active]="card.theme.id === activeTheme()"
+	>
+		<button type="button" class="card__select" (click)="selected.emit(card.theme.id)">
+			<span class="card__keys">
+				@for (sample of samples; track sample.id) {
+					<sd-deck-key [button]="sample" />
+				}
+			</span>
+			<span class="card__text">
+				<span class="card__name">{{ card.theme.name }}</span>
+				<span class="card__description">Based on {{ card.base }}</span>
+			</span>
+			@if (card.theme.id === activeTheme()) {
+				<i class="card__check ph-bold ph-check" aria-hidden="true"></i>
+			}
+		</button>
+		<span class="card__tools">
+			<button
+				type="button"
+				class="tool"
+				aria-label="Edit theme"
+				(click)="editRequested.emit(card.theme)"
+			>
+				<i class="ph ph-pencil-simple" aria-hidden="true"></i>
+			</button>
+			<button
+				type="button"
+				class="tool tool--danger"
+				[attr.aria-label]="
+					confirmingDeleteId() === card.theme.id ? 'Confirm delete' : 'Delete theme'
+				"
+				(click)="requestDelete(card.theme)"
+			>
+				<i
+					[class]="confirmingDeleteId() === card.theme.id ? 'ph ph-check' : 'ph ph-trash'"
+					aria-hidden="true"
+				></i>
+			</button>
+		</span>
+	</div>
+} @empty {
+	<p class="hint">No custom themes yet.</p>
+}
+<button type="button" class="create" (click)="createRequested.emit()">
+	<i class="ph ph-plus" aria-hidden="true"></i> Create your own theme
+</button>

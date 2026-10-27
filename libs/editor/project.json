@@ -1,0 +1,10 @@
+{
+	"name": "editor",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/editor/src",
+	"prefix": "sd",
+	"projectType": "library",
+	"tags": ["type:lib", "scope:shared"],
+	"// targets": "to see all targets run: nx show project editor --web",
+	"targets": {}
+}

@@ -1,0 +1,133 @@
+{
+	"name": "host",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"projectType": "application",
+	"sourceRoot": "apps/host",
+	"tags": ["type:app", "scope:host", "lang:go"],
+	"namedInputs": {
+		"goSources": [
+			"{projectRoot}/**/*.go",
+			"{projectRoot}/go.mod",
+			"{projectRoot}/go.sum",
+			"{workspaceRoot}/go.work"
+		]
+	},
+	"targets": {
+		"serve": {
+			"executor": "nx:run-commands",
+			"continuous": true,
+			"dependsOn": [
+				{
+					"projects": ["desktop", "mobile"],
+					"target": "build",
+					"params": "ignore"
+				}
+			],
+			"options": {
+				"command": "go run .",
+				"cwd": "apps/host"
+			},
+			"configurations": {
+				"sandbox": {
+					"command": "go run .",
+					"env": {
+						"PANEEL_PORT": "48221",
+						"PANEEL_CONFIG_DIR": "../../tmp/sandbox-desktop"
+					}
+				}
+			}
+		},
+		"serve-headless": {
+			"executor": "nx:run-commands",
+			"continuous": true,
+			"dependsOn": [
+				{
+					"projects": ["mobile"],
+					"target": "build",
+					"params": "ignore"
+				}
+			],
+			"options": {
+				"command": "go run ./cmd/hostd -static static/deck",
+				"cwd": "apps/host"
+			},
+			"configurations": {
+				"sandbox": {
+					"command": "go run ./cmd/hostd -static static/deck",
+					"env": {
+						"PANEEL_PORT": "48222",
+						"PANEEL_CONFIG_DIR": "../../tmp/sandbox-headless"
+					}
+				}
+			}
+		},
+		"build": {
+			"executor": "nx:run-commands",
+			"cache": true,
+			"dependsOn": [
+				{
+					"projects": ["desktop", "mobile"],
+					"target": "build",
+					"params": "ignore"
+				}
+			],
+			"inputs": [
+				"goSources",
+				"{projectRoot}/frontend/dist/**/*",
+				"{projectRoot}/static/deck/**/*",
+				"{projectRoot}/build/**/*",
+				"{projectRoot}/Taskfile.yml"
+			],
+			"outputs": ["{projectRoot}/bin"],
+			"options": {
+				"command": "wails3 build",
+				"cwd": "apps/host"
+			}
+		},
+		"package": {
+			"executor": "nx:run-commands",
+			"dependsOn": ["build"],
+			"options": {
+				"command": "wails3 package",
+				"cwd": "apps/host"
+			}
+		},
+		"bindings": {
+			"executor": "nx:run-commands",
+			"cache": true,
+			"inputs": ["goSources"],
+			"outputs": ["{workspaceRoot}/apps/desktop/src/bindings"],
+			"options": {
+				"command": "wails3 generate bindings -d ../desktop/src/bindings -ts -i -clean=true",
+				"cwd": "apps/host"
+			}
+		},
+		"test": {
+			"executor": "nx:run-commands",
+			"cache": true,
+			"inputs": ["goSources"],
+			"options": {
+				"command": "go test ./...",
+				"cwd": "apps/host"
+			}
+		},
+		"typecheck": {
+			"executor": "nx:run-commands",
+			"cache": true,
+			"inputs": ["goSources"],
+			"options": {
+				"command": "go vet ./...",
+				"cwd": "apps/host"
+			}
+		},
+		"lint": {
+			"executor": "nx:run-commands",
+			"cache": true,
+			"inputs": ["goSources", "{projectRoot}/.golangci.yml"],
+			"options": {
+				"command": "golangci-lint run ./...",
+				"cwd": "apps/host"
+			}
+		}
+	}
+}

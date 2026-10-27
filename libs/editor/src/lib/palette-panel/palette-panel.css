@@ -1,0 +1,121 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply block;
+}
+
+.hint {
+	@apply sd-hint mb-3;
+}
+
+.group {
+	@apply mt-3.5 mb-1.5 sd-group-label;
+}
+
+.group:first-of-type {
+	@apply mt-0;
+}
+
+.card {
+	@apply relative mb-2 flex w-full items-center gap-3.5 rounded-sd-lg border-2 border-transparent px-3 py-2.5 text-left text-text;
+	@apply sd-themed-bg;
+	@apply sd-font-inherit;
+}
+
+.card--active {
+	@apply border-accent;
+}
+
+.card__dots {
+	@apply grid shrink-0 grid-cols-[repeat(3,18px)] gap-1 text-[20px] text-faint;
+}
+
+.dot {
+	@apply size-[18px] rounded-[30%];
+}
+
+.card__text {
+	@apply flex min-w-0 flex-col gap-0.5;
+	@apply flex-[1_1_120px];
+}
+
+.card__name {
+	@apply text-[15px];
+	@apply sd-heading;
+}
+
+.card__description {
+	@apply text-[13px] text-muted;
+}
+
+.card__check {
+	@apply absolute top-1/2 right-3 -translate-y-1/2 text-[22px] text-accent;
+}
+
+.card--active .card__text {
+	@apply pr-7;
+}
+
+.card--custom {
+	@apply overflow-hidden p-0;
+}
+
+.card__select {
+	@apply relative flex min-w-0 flex-1 items-center gap-3.5 border-0 bg-transparent px-3 py-2.5 text-left text-inherit;
+	@apply sd-font-inherit;
+}
+
+.card__tools {
+	@apply flex gap-1 p-2;
+}
+
+.tool {
+	@apply grid size-[34px] place-items-center rounded-sd border-0 bg-surface-2 text-[16px] text-text;
+}
+
+.tool--danger {
+	@apply text-danger-text;
+}
+
+.create {
+	@apply mt-2 sd-btn-primary justify-start;
+}
+
+/* Sticky, so the recolor action stays in view while browsing the palettes below it. */
+.recolor {
+	@apply sticky top-0 z-[1] mb-3.5 flex flex-col gap-2.5 rounded-sd-lg border border-border bg-bg p-3 text-[13px] text-muted;
+	box-shadow: 0 6px 16px rgb(0 0 0 / 0.25);
+}
+
+.recolor--fresh {
+	@apply border-accent;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--sd-accent) 25%, transparent);
+}
+
+.recolor__text strong {
+	@apply text-text;
+}
+
+.recolor__preview {
+	@apply grid grid-cols-6 gap-1.5;
+}
+
+.recolor__actions {
+	@apply flex gap-2;
+}
+
+.recolor__actions > * {
+	@apply flex-1;
+}
+
+.recolor__undo {
+	@apply sd-btn-secondary;
+}
+
+.recolor__button {
+	@apply sd-btn-primary;
+}
+
+.recolor__button:disabled {
+	@apply opacity-50;
+}

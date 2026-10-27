@@ -1,0 +1,101 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply block;
+}
+
+.toolbar {
+	@apply mb-2.5 flex items-center gap-2;
+}
+
+.search {
+	@apply sd-input min-w-0 flex-1;
+}
+
+.filter {
+	@apply sd-chip shrink-0;
+}
+
+.filter--active {
+	@apply border-accent bg-accent text-accent-text;
+}
+
+.hint {
+	@apply sd-hint mb-3;
+}
+
+.back {
+	@apply mb-3 sd-back-link;
+}
+
+.list {
+	@apply m-0 flex list-none flex-col gap-1 p-0;
+}
+
+.app {
+	@apply flex w-full items-center gap-3 rounded-sd border-0 bg-surface-2 px-2.5 py-2.5 text-left text-text;
+	@apply sd-font-inherit;
+}
+
+.app__icon {
+	@apply shrink-0 text-[26px] text-accent-soft;
+}
+
+.app__text {
+	@apply flex min-w-0 flex-1 flex-col gap-0.5;
+}
+
+.app__name {
+	@apply font-semibold;
+}
+
+.app__meta {
+	@apply flex items-center gap-1.5 text-[12px] text-faint;
+}
+
+.app__installed {
+	@apply rounded-full bg-accent px-1.5 py-px text-[11px] font-semibold text-accent-text;
+}
+
+.app__chevron {
+	@apply shrink-0 text-[18px] text-faint;
+}
+
+.app-header {
+	@apply mb-3 flex items-start gap-3;
+}
+
+.app-header__icon {
+	@apply shrink-0 text-[32px] text-accent-soft;
+}
+
+.app-header__text {
+	@apply min-w-0 flex-1;
+}
+
+.app-header__name {
+	@apply m-0 text-[15px];
+	@apply sd-heading;
+}
+
+.app-header__description {
+	@apply mt-0.5 mb-0 text-[13px] text-faint;
+}
+
+.add-all {
+	@apply sd-btn-secondary shrink-0 px-3 py-2;
+}
+
+.group {
+	@apply mb-5;
+}
+
+.group__name {
+	@apply m-0 mb-2.5 text-[15px];
+	@apply sd-heading;
+}
+
+.grid {
+	@apply grid gap-2.5;
+	@apply sd-grid-fill-[84px];
+}

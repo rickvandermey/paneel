@@ -1,0 +1,167 @@
+<div class="tabs" role="tablist">
+	@for (entry of tabs; track entry.id) {
+		<button
+			type="button"
+			role="tab"
+			class="tab"
+			[class.tab--active]="tab() === entry.id"
+			[attr.aria-selected]="tab() === entry.id"
+			(click)="tab.set(entry.id)"
+		>
+			<i [class]="'ph ph-' + entry.icon" aria-hidden="true"></i>
+			<span>{{ entry.label }}</span>
+		</button>
+	}
+</div>
+
+@if (error(); as error) {
+	<p class="error">{{ error }}</p>
+}
+@switch (tab()) {
+	@case ('app') {
+		<p class="hint">
+			Type the app name as it appears in Applications. The host extracts its icon.
+		</p>
+		<form class="row" (submit)="$event.preventDefault(); resolveApp()">
+			<input
+				type="text"
+				autocapitalize="off"
+				placeholder="Safari"
+				[ngModel]="appTarget()"
+				(ngModelChange)="appTarget.set($event)"
+				name="app"
+			/>
+			<button type="submit" class="primary" [disabled]="busy() || !appTarget()">
+				{{ busy() ? 'Looking up…' : 'Use app icon' }}
+			</button>
+		</form>
+		<p class="hint">Or pick one of the apps installed on your computer:</p>
+		<sd-app-picker (picked)="useInstalledApp($event)" />
+	}
+	@case ('website') {
+		<p class="hint">The host downloads the site's favicon or touch icon.</p>
+		<form class="row" (submit)="$event.preventDefault(); resolveWebsite()">
+			<input
+				type="url"
+				inputmode="url"
+				autocapitalize="off"
+				placeholder="github.com"
+				[ngModel]="websiteUrl()"
+				(ngModelChange)="websiteUrl.set($event)"
+				name="url"
+			/>
+			<button type="submit" class="primary" [disabled]="busy() || !websiteUrl()">
+				{{ busy() ? 'Looking up…' : 'Use favicon' }}
+			</button>
+		</form>
+	}
+	@case ('logo') {
+		<p class="hint">
+			Brand logos from Simple Icons, stored in white or black to match the key color.
+		</p>
+		<div class="row">
+			<input
+				type="search"
+				autocapitalize="off"
+				placeholder="Search logos, e.g. Spotify"
+				[ngModel]="logoQuery()"
+				(ngModelChange)="logoQuery.set($event)"
+				name="logoQuery"
+			/>
+		</div>
+		@if (logos() === null) {
+			<p class="hint">Loading logo list…</p>
+		} @else if (!logoQuery().trim()) {
+			<p class="hint">Type to search {{ logos()?.length }} logos.</p>
+		} @else if (logoResults().length === 0) {
+			<p class="hint">No logo matches.</p>
+		}
+		<ul class="logos">
+			@for (logo of logoResults(); track logo.slug) {
+				<li>
+					<button
+						type="button"
+						class="logo"
+						[disabled]="busy()"
+						(click)="pickLogo(logo.slug)"
+					>
+						<span class="logo__swatch" [style.background]="'#' + logo.hex"></span>
+						<span class="logo__title">{{ logo.title }}</span>
+						<span class="logo__slug">{{ logo.slug }}</span>
+					</button>
+				</li>
+			}
+		</ul>
+	}
+	@case ('icon') {
+		<div class="row">
+			<input
+				type="search"
+				autocapitalize="off"
+				placeholder="Search Phosphor icons"
+				[ngModel]="phosphorQuery()"
+				(ngModelChange)="phosphorQuery.set($event)"
+				name="query"
+			/>
+			<select
+				[ngModel]="phosphorWeight()"
+				(ngModelChange)="phosphorWeight.set($event)"
+				name="weight"
+				aria-label="Weight"
+			>
+				<option value="regular">Regular</option>
+				<option value="bold">Bold</option>
+				<option value="fill">Fill</option>
+			</select>
+		</div>
+		<div class="grid">
+			@for (name of phosphorResults(); track name) {
+				<button
+					type="button"
+					class="cell"
+					[title]="name"
+					[class.cell--active]="isActivePhosphor(name)"
+					(click)="pickPhosphor(name)"
+				>
+					<i [class]="phosphorClass(name)" aria-hidden="true"></i>
+				</button>
+			}
+		</div>
+	}
+	@case ('emoji') {
+		<form class="row" (submit)="$event.preventDefault(); pickEmoji(customEmoji())">
+			<input
+				type="text"
+				placeholder="Paste any emoji"
+				[ngModel]="customEmoji()"
+				(ngModelChange)="customEmoji.set($event)"
+				name="emoji"
+			/>
+			<button type="submit" class="primary" [disabled]="!customEmoji().trim()">Use</button>
+		</form>
+		@for (group of emojiGroups; track group.name) {
+			<h4 class="group">{{ group.name }}</h4>
+			<div class="grid">
+				@for (emoji of group.emojis; track emoji) {
+					<button type="button" class="cell" (click)="pickEmoji(emoji)">
+						{{ emoji }}
+					</button>
+				}
+			</div>
+		}
+	}
+	@case ('upload') {
+		<p class="hint">PNG, JPEG, SVG, GIF or WebP up to 5 MB. Square images look best.</p>
+		<input
+			type="file"
+			accept="image/png,image/jpeg,image/svg+xml,image/gif,image/webp"
+			[disabled]="busy()"
+			(change)="upload($event)"
+		/>
+	}
+}
+@if (icon()) {
+	<button type="button" class="remove" (click)="removeIcon()">
+		<i class="ph ph-trash" aria-hidden="true"></i> Remove icon
+	</button>
+}

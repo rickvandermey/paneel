@@ -1,0 +1,10 @@
+{
+	"name": "playwright-config",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "tools/playwright-config/src",
+	"projectType": "library",
+	"tags": ["type:e2e", "scope:e2e"],
+	"targets": {
+		"typecheck": {}
+	}
+}

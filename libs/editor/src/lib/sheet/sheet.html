@@ -1,0 +1,18 @@
+<button
+	type="button"
+	class="backdrop"
+	aria-label="Close"
+	tabindex="-1"
+	(click)="closed.emit()"
+></button>
+<section class="sheet" role="dialog" [attr.aria-label]="title()">
+	<header class="sheet__header">
+		<h2 class="sheet__title">{{ title() }}</h2>
+		<button type="button" class="sheet__close" aria-label="Close" (click)="closed.emit()">
+			<i class="ph ph-x" aria-hidden="true"></i>
+		</button>
+	</header>
+	<div class="sheet__body">
+		<ng-content />
+	</div>
+</section>

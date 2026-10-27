@@ -1,0 +1,222 @@
+@if (pickingIconFor() !== null) {
+	<div class="picker">
+		<button type="button" class="back" (click)="pickingIconFor.set(null)">
+			<i class="ph ph-arrow-left" aria-hidden="true"></i> Back to button
+		</button>
+		<sd-icon-picker
+			[icon]="pickerIcon()"
+			[actions]="pickerActions()"
+			[keyColor]="pickerColor()"
+			(picked)="onIconPicked($event)"
+		/>
+	</div>
+} @else {
+	<div class="top">
+		<div class="preview">
+			<sd-deck-key [button]="preview()" [assetUrl]="assetUrl()" />
+			@if (toggleEnabled() && !isFolder()) {
+				<sd-deck-key [button]="preview()" [assetUrl]="assetUrl()" [on]="true" />
+			}
+		</div>
+		<div class="top__fields">
+			<label class="field">
+				<span>Label</span>
+				<input
+					type="text"
+					[ngModel]="label()"
+					(ngModelChange)="label.set($event)"
+					name="label"
+					placeholder="Copy"
+				/>
+			</label>
+			<label class="check">
+				<input
+					type="checkbox"
+					[ngModel]="showLabel()"
+					(ngModelChange)="showLabel.set($event)"
+					name="showLabel"
+				/>
+				<span>Show label on key</span>
+			</label>
+			<button type="button" class="secondary" (click)="pickingIconFor.set('button')">
+				<i class="ph ph-image" aria-hidden="true"></i>
+				{{ icon() ? 'Change icon' : 'Choose icon' }}
+			</button>
+			@if (isNew()) {
+				<label class="check">
+					<input
+						type="checkbox"
+						[ngModel]="asFolder()"
+						(ngModelChange)="asFolder.set($event)"
+						name="asFolder"
+					/>
+					<span>Folder (holds other buttons)</span>
+				</label>
+			}
+		</div>
+	</div>
+
+	<h3 class="section">Color</h3>
+	<div class="swatches">
+		<ng-container
+			*ngTemplateOutlet="swatchButtons; context: { active: color(), pick: setColor }"
+		/>
+		<label class="swatch swatch--custom" title="Custom color">
+			<i class="ph ph-eyedropper" aria-hidden="true"></i>
+			<input
+				type="color"
+				[ngModel]="color()"
+				(ngModelChange)="color.set($event)"
+				name="color"
+			/>
+		</label>
+	</div>
+
+	@if (!isFolder()) {
+		<h3 class="section">Actions</h3>
+		<p class="hint">Actions run in order when the key is pressed.</p>
+		<sd-action-list
+			[actions]="actions()"
+			[profiles]="profiles()"
+			[platform]="platform()"
+			(actionsChange)="actions.set($event)"
+			(appPicked)="onAppPicked($event)"
+		/>
+
+		<h3 class="section">Hold</h3>
+		<label class="check">
+			<input
+				type="checkbox"
+				[ngModel]="repeat()"
+				(ngModelChange)="repeat.set($event)"
+				name="repeat"
+				[disabled]="toggleEnabled()"
+			/>
+			<span>Keep pressing while held, for volume, brightness and scrolling</span>
+		</label>
+
+		<h3 class="section">Toggle</h3>
+		<label class="check">
+			<input
+				type="checkbox"
+				[ngModel]="toggleEnabled()"
+				(ngModelChange)="toggleEnabled.set($event)"
+				name="toggleEnabled"
+			/>
+			<span>Two states: the next press runs other actions and shows a different look</span>
+		</label>
+		@if (toggleEnabled()) {
+			<div class="toggle">
+				<p class="hint">
+					The first press runs the actions above and turns the key on. While on, the key
+					shows this look, and the next press runs these actions and turns it off.
+				</p>
+				<div class="toggle__fields">
+					<label class="field">
+						<span>Label while on</span>
+						<input
+							type="text"
+							[ngModel]="toggleLabel()"
+							(ngModelChange)="toggleLabel.set($event)"
+							name="toggleLabel"
+							[placeholder]="label() || 'Same as label'"
+						/>
+					</label>
+					<button type="button" class="secondary" (click)="pickingIconFor.set('toggle')">
+						<i class="ph ph-image" aria-hidden="true"></i>
+						{{ toggleIcon() ? 'Change icon while on' : 'Icon while on' }}
+					</button>
+				</div>
+				<p class="hint">Color while on</p>
+				<div class="swatches">
+					<button
+						type="button"
+						class="swatch swatch--none"
+						[class.swatch--active]="!toggleColor()"
+						aria-label="Same color"
+						title="Same color"
+						(click)="toggleColor.set('')"
+					>
+						<i class="ph ph-prohibit" aria-hidden="true"></i>
+					</button>
+					<ng-container
+						*ngTemplateOutlet="
+							swatchButtons;
+							context: { active: toggleColor(), pick: setToggleColor }
+						"
+					/>
+				</div>
+				<p class="hint">Actions when turning off</p>
+				<sd-action-list
+					[actions]="toggleActions()"
+					[profiles]="profiles()"
+					[platform]="platform()"
+					(actionsChange)="toggleActions.set($event)"
+				/>
+			</div>
+		}
+	}
+
+	<footer class="footer">
+		@if (!isNew() && isFolder()) {
+			<button type="button" class="secondary" (click)="openFolder.emit()">
+				<i class="ph ph-folder-open" aria-hidden="true"></i> Open folder to edit its buttons
+			</button>
+		}
+		@if (!isNew()) {
+			<div class="footer__row">
+				<button
+					type="button"
+					class="secondary"
+					[disabled]="!canMoveBack()"
+					(click)="moved.emit('back')"
+				>
+					<i class="ph ph-arrow-left" aria-hidden="true"></i> Move
+				</button>
+				<button
+					type="button"
+					class="secondary"
+					[disabled]="!canMoveForward()"
+					(click)="moved.emit('forward')"
+				>
+					Move <i class="ph ph-arrow-right" aria-hidden="true"></i>
+				</button>
+				<button type="button" class="danger" (click)="requestDelete()">
+					<i class="ph ph-trash" aria-hidden="true"></i>
+					{{ confirmingDelete() ? 'Really delete?' : 'Delete' }}
+				</button>
+			</div>
+		}
+		@if (!isFolder()) {
+			<button
+				type="button"
+				class="secondary try"
+				[disabled]="actions().length === 0"
+				(click)="tryActions()"
+			>
+				<i class="ph ph-play" aria-hidden="true"></i>
+				Try it on your computer now
+			</button>
+		}
+		<div class="footer__row">
+			<button type="button" class="secondary" (click)="cancelled.emit()">Cancel</button>
+			<button type="button" class="primary" (click)="save()">
+				{{ isNew() ? 'Add button' : 'Save' }}
+			</button>
+		</div>
+	</footer>
+}
+
+<!-- The palette and generic swatches, used for the button color and the color while on. -->
+<ng-template #swatchButtons let-active="active" let-pick="pick">
+	@for (swatch of swatches(); track swatch) {
+		<button
+			type="button"
+			class="swatch"
+			[style.background]="swatch"
+			[class.swatch--active]="swatch === active"
+			[attr.aria-label]="swatch"
+			(click)="pick(swatch)"
+		></button>
+	}
+</ng-template>

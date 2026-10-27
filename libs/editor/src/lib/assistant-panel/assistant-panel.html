@@ -1,0 +1,87 @@
+@if (status(); as current) {
+	@if (!current.configured) {
+		<p class="hint">
+			The page builder uses an AI model through your own account. Set an API key in the Paneel
+			app on your computer (or the ANTHROPIC_API_KEY or OPENAI_API_KEY environment variable),
+			then come back here.
+		</p>
+		<button type="button" class="secondary" (click)="settingsRequested.emit()">
+			<i class="ph ph-gear" aria-hidden="true"></i> Model settings
+		</button>
+	} @else {
+		<p class="hint">
+			Describe the page you want. It can only build and change pages; the model picks from the
+			standard buttons and may add a few custom keys.
+			<span class="hint__model">{{ current.provider }} · {{ current.model }}</span>
+		</p>
+	}
+}
+
+<ol #log class="log" aria-label="Conversation">
+	@for (turn of turns(); track $index) {
+		<li class="turn" [attr.data-role]="turn.role">
+			<span class="turn__text">{{ turn.text }}</span>
+		</li>
+	} @empty {
+		@if (status()?.configured) {
+			<li class="turn turn--suggestions">
+				@for (suggestion of suggestions; track suggestion) {
+					<button type="button" class="chip" (click)="sendSuggestion(suggestion)">
+						{{ suggestion }}
+					</button>
+				}
+			</li>
+		}
+	}
+	@if (busy()) {
+		<li class="turn turn--busy">Thinking…</li>
+	}
+</ol>
+@if (failure(); as message) {
+	<p class="error">{{ message }}</p>
+}
+
+@if (plan(); as current) {
+	<section class="plan">
+		<h4 class="plan__title">
+			{{ current.target === 'current' ? 'Add to this page' : current.name }}
+			@if (current.apps.length > 0) {
+				<span class="plan__apps">follows {{ current.apps.join(', ') }}</span>
+			}
+		</h4>
+		<div class="plan__grid">
+			@for (key of preview(); track key.id) {
+				<sd-deck-key [button]="key" [assetUrl]="assetUrl()" />
+			}
+		</div>
+		<div class="row">
+			<button type="button" class="primary" (click)="applyPlan()">
+				<i class="ph ph-plus" aria-hidden="true"></i>
+				{{ current.target === 'current' ? 'Add these keys' : 'Add this page' }}
+			</button>
+			<button type="button" class="secondary" (click)="startOver()">Start over</button>
+		</div>
+	</section>
+}
+
+@if (status()?.configured) {
+	<form class="composer" (submit)="$event.preventDefault(); send()">
+		<input
+			type="text"
+			name="assistantDraft"
+			autocomplete="off"
+			placeholder="e.g. a page for editing video in DaVinci"
+			[ngModel]="draft()"
+			(ngModelChange)="draft.set($event)"
+			[disabled]="busy()"
+		/>
+		<button
+			type="submit"
+			class="primary composer__send"
+			[disabled]="!canSend()"
+			aria-label="Send"
+		>
+			<i class="ph ph-paper-plane-right" aria-hidden="true"></i>
+		</button>
+	</form>
+}

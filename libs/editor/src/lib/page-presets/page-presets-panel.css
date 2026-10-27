@@ -1,0 +1,64 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply block;
+}
+
+.search,
+.blank input {
+	@apply sd-input;
+}
+
+.group {
+	@apply mt-4 mb-1.5 sd-group-label;
+}
+
+.hint {
+	@apply sd-hint mb-2;
+}
+
+.card {
+	@apply mb-1.5 flex w-full items-center gap-3 rounded-sd-lg border-0 bg-bg px-3 py-2.5 text-left text-text;
+	@apply sd-font-inherit;
+}
+
+.card__icon {
+	@apply shrink-0 text-[26px] text-accent-soft;
+}
+
+.card__text {
+	@apply flex min-w-0 flex-1 flex-col gap-0.5;
+}
+
+.card__name {
+	@apply text-[15px];
+	@apply sd-heading;
+}
+
+.card__description {
+	@apply text-[13px] text-muted;
+}
+
+.card__apps {
+	@apply text-[12px] text-accent-soft;
+}
+
+.card__add {
+	@apply text-[20px] text-faint;
+}
+
+.blank {
+	@apply flex gap-2;
+}
+
+.blank input {
+	@apply min-w-0 flex-1;
+}
+
+.primary {
+	@apply sd-btn-primary px-3.5 py-2.5 whitespace-nowrap;
+}
+
+.primary:disabled {
+	@apply opacity-50;
+}

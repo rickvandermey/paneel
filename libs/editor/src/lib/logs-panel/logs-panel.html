@@ -1,0 +1,60 @@
+<p class="hint">
+	What the host and this deck did, newest at the bottom. Paste it into a bug report: it never
+	contains the pairing token, typed text or prompts.
+</p>
+<div class="toolbar">
+	<select [ngModel]="levelFilter()" (ngModelChange)="levelFilter.set($event)" name="logLevel">
+		<option value="all">All lines</option>
+		<option value="info">Info and up</option>
+		<option value="warn">Warnings only</option>
+	</select>
+	<label class="check">
+		<input
+			type="checkbox"
+			name="verbose"
+			[ngModel]="verbose()"
+			(ngModelChange)="verboseChanged.emit($event)"
+		/>
+		<span>Verbose</span>
+	</label>
+	<button type="button" class="icon-button" aria-label="Refresh" (click)="refresh()">
+		<i class="ph ph-arrows-clockwise" aria-hidden="true"></i>
+	</button>
+</div>
+@if (failure(); as message) {
+	<p class="error">{{ message }} Showing what this deck logged by itself.</p>
+}
+<ol #list class="lines" aria-label="Log lines">
+	@for (entry of visibleEntries(); track $index) {
+		<li class="line" [attr.data-level]="entry.level" [attr.data-source]="entry.source">
+			<span class="line__time">{{ displayTime(entry) }}</span>
+			<span class="line__source">{{ entry.source }}</span>
+			<span class="line__text"
+				>{{ entry.message }}
+				@if (entry.fields) {
+					<span class="line__fields">{{ entry.fields }}</span>
+				}
+			</span>
+		</li>
+	} @empty {
+		<li class="line line--empty">Nothing logged yet.</li>
+	}
+</ol>
+<div class="row">
+	<button type="button" class="secondary" (click)="copyLog()">
+		<i class="ph ph-copy" aria-hidden="true"></i> Copy log
+	</button>
+	@if (canShare) {
+		<button type="button" class="secondary" (click)="shareLog()">
+			<i class="ph ph-share-network" aria-hidden="true"></i> Share
+		</button>
+	}
+	@if (downloadUrl(); as url) {
+		<a class="secondary" [href]="url" download="paneel-log.txt">
+			<i class="ph ph-download-simple" aria-hidden="true"></i> Download
+		</a>
+	}
+	<button type="button" class="danger" (click)="clearLog()">
+		<i class="ph ph-trash" aria-hidden="true"></i> Clear
+	</button>
+</div>

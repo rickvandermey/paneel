@@ -1,0 +1,179 @@
+<section class="group">
+	<h3 class="section">Connection</h3>
+	<dl class="facts">
+		<dt>Computer</dt>
+		<dd>{{ host()?.hostName ?? '–' }} ({{ host()?.platform ?? '?' }})</dd>
+		<dt>Status</dt>
+		<dd class="status">{{ status() }}</dd>
+		<dt>Network</dt>
+		<dd>{{ networkMs() === null ? '–' : networkMs() + ' ms' }}</dd>
+		<dt>Last action</dt>
+		<dd>{{ executionMs() === null ? '–' : executionMs() + ' ms' }}</dd>
+		<dt>Config revision</dt>
+		<dd>{{ revision() }}</dd>
+	</dl>
+	<p class="hint">
+		Changing the port or the token drops every connected deck. This one reconnects by itself;
+		others must scan the QR code again.
+	</p>
+	<form class="row" (submit)="$event.preventDefault(); applyPort()">
+		<label class="field">
+			<span>Port</span>
+			<input
+				type="number"
+				inputmode="numeric"
+				min="1024"
+				max="65535"
+				[ngModel]="portDraft()"
+				(ngModelChange)="portDraft.set($event)"
+				name="port"
+			/>
+		</label>
+		<button type="submit" class="secondary" [disabled]="!portChanged()">Apply port</button>
+	</form>
+	<button type="button" class="secondary" (click)="requestTokenRotation()">
+		<i class="ph ph-key" aria-hidden="true"></i>
+		{{ confirmingRotate() ? 'Really regenerate the token?' : 'Regenerate pairing token' }}
+	</button>
+</section>
+
+<section class="group">
+	<h3 class="section">Smart pages</h3>
+	<p class="hint">
+		Pages come to the front when their app gets the focus. Focused right now:
+		<strong>{{ activeApp()?.name || 'unknown' }}</strong
+		>.
+	</p>
+	<select
+		[ngModel]="settings()?.smartPages ?? 'buttons'"
+		(ngModelChange)="smartPagesChanged.emit($event)"
+		name="smartPages"
+		aria-label="Smart pages mode"
+	>
+		<option value="buttons">Chosen apps and button apps</option>
+		<option value="explicit">Chosen apps only</option>
+	</select>
+</section>
+
+<section class="group">
+	<h3 class="section">Terminal</h3>
+	<p class="hint">Used by "Run in terminal" actions, for example to start Claude or Codex.</p>
+	<select
+		[ngModel]="settings()?.terminal ?? ''"
+		(ngModelChange)="terminalChanged.emit($event)"
+		name="terminal"
+		aria-label="Terminal app"
+	>
+		@for (terminal of terminals(); track terminal.value) {
+			<option [value]="terminal.value">{{ terminal.label }}</option>
+		}
+	</select>
+</section>
+
+<section class="group">
+	<h3 class="section">AI page builder</h3>
+	<p class="hint">
+		"Build a page with AI" talks to a model through your own account. The API key is set in the
+		Paneel app on your computer and never leaves it.
+	</p>
+	<select
+		[ngModel]="assistantProvider()"
+		(ngModelChange)="updateAssistant({ provider: $event })"
+		name="assistantProvider"
+		aria-label="AI provider"
+	>
+		<option value="anthropic">Anthropic (Claude)</option>
+		<option value="openai">OpenAI-compatible (OpenAI, Ollama, LM Studio, OpenRouter)</option>
+	</select>
+	<label class="field">
+		<span>Model (optional)</span>
+		<input
+			type="text"
+			autocapitalize="off"
+			[placeholder]="assistantProvider() === 'openai' ? 'gpt-5' : 'claude-opus-5-5'"
+			[ngModel]="assistant().model ?? ''"
+			(ngModelChange)="updateAssistant({ model: $event })"
+			name="assistantModel"
+		/>
+	</label>
+	@if (assistantProvider() === 'openai') {
+		<label class="field">
+			<span>Base URL (optional, for Ollama or LM Studio)</span>
+			<input
+				type="url"
+				autocapitalize="off"
+				placeholder="http://localhost:11434/v1"
+				[ngModel]="assistant().baseUrl ?? ''"
+				(ngModelChange)="updateAssistant({ baseUrl: $event })"
+				name="assistantBaseUrl"
+			/>
+		</label>
+	}
+	<label class="check">
+		<input
+			type="checkbox"
+			name="assistantShareApps"
+			[ngModel]="assistant().shareApps ?? false"
+			(ngModelChange)="updateAssistant({ shareApps: $event })"
+		/>
+		<span>Share the names of installed apps, so pages can follow them</span>
+	</label>
+</section>
+
+<section class="group">
+	<h3 class="section">Logs</h3>
+	<p class="hint">
+		What the host and this deck did, for when something does not work. Safe to paste into a bug
+		report.
+	</p>
+	<button type="button" class="secondary" (click)="logsRequested.emit()">
+		<i class="ph ph-scroll" aria-hidden="true"></i> Show logs
+	</button>
+</section>
+
+<section class="group">
+	<h3 class="section">Backup</h3>
+	<p class="hint">
+		One zip with pages, settings and icons. Restoring replaces everything on the host; pairing
+		stays.
+	</p>
+	<div class="row">
+		<a class="secondary" [href]="backupUrl()" download="paneel-backup.zip">
+			<i class="ph ph-download-simple" aria-hidden="true"></i> Download backup
+		</a>
+		<label class="secondary">
+			<i class="ph ph-upload-simple" aria-hidden="true"></i> Restore from backup
+			<input
+				type="file"
+				accept=".zip,application/zip"
+				hidden
+				(change)="onRestoreFile($event)"
+			/>
+		</label>
+	</div>
+</section>
+
+<section class="group">
+	<h3 class="section">Reset</h3>
+	<p class="hint">
+		Start clean replaces every page and setting on the host with the defaults; pairing stays.
+		Reload restarts this deck's session.
+		@if (canDisconnect()) {
+			Forget removes the pairing from this phone.
+		}
+	</p>
+	<div class="row">
+		<button type="button" class="danger" (click)="requestReset()">
+			<i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>
+			{{ confirmingReset() ? 'Really start clean?' : 'Start clean' }}
+		</button>
+		<button type="button" class="secondary" (click)="reloadDeck()">
+			<i class="ph ph-arrows-clockwise" aria-hidden="true"></i> Reload this deck
+		</button>
+		@if (canDisconnect()) {
+			<button type="button" class="danger" (click)="disconnected.emit()">
+				<i class="ph ph-plugs" aria-hidden="true"></i> Forget this computer
+			</button>
+		}
+	</div>
+</section>

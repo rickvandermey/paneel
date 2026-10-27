@@ -1,0 +1,39 @@
+<input
+	type="search"
+	autocapitalize="off"
+	placeholder="Search installed apps"
+	[ngModel]="query()"
+	(ngModelChange)="query.set($event)"
+	name="appQuery"
+/>
+@if (error(); as error) {
+	<p class="error">{{ error }}</p>
+}
+@if (apps() === null) {
+	<p class="hint">Loading apps from your computer…</p>
+} @else if (results().length === 0) {
+	<p class="hint">No app matches. You can also type the name yourself.</p>
+} @else {
+	<p class="hint">{{ countLabel() }}</p>
+}
+<ul class="list">
+	@for (app of results(); track app.path) {
+		<li>
+			<button
+				type="button"
+				class="app"
+				[class.app--selected]="isSelected(app)"
+				[attr.aria-pressed]="isSelected(app)"
+				(click)="picked.emit(app)"
+			>
+				<span class="app__text">
+					<span class="app__name">{{ app.name }}</span>
+					<span class="app__path">{{ app.path }}</span>
+				</span>
+				@if (isSelected(app)) {
+					<i class="app__check ph-bold ph-check" aria-hidden="true"></i>
+				}
+			</button>
+		</li>
+	}
+</ul>

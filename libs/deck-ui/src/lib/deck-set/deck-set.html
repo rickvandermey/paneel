@@ -1,0 +1,12 @@
+@for (button of buttons(); track button.id) {
+	<sd-deck-key
+		[button]="button"
+		[active]="activeButtonId() === button.id"
+		[assetUrl]="assetUrl()"
+		[editing]="editing()"
+		[dragging]="draggingId() === button.id"
+		[dropTarget]="dropTargetId() === button.id"
+		[on]="buttonStates()[button.id] ?? false"
+		(pressed)="pressed.emit($event)"
+	/>
+}

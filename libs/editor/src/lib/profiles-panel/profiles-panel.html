@@ -1,0 +1,159 @@
+@if (followAppsProfileId()) {
+	<button type="button" class="back" (click)="followAppsProfileId.set(null)">
+		<i class="ph ph-arrow-left" aria-hidden="true"></i> Back to pages
+	</button>
+	<p class="hint">
+		These apps bring this page to the front when they get the focus. Websites live in a browser,
+		so follow the browser for them.
+	</p>
+	<div class="chips">
+		@for (name of followedApps(); track name) {
+			<span class="chip">
+				{{ name }}
+				<button
+					type="button"
+					class="chip__remove"
+					[attr.aria-label]="'Stop following ' + name"
+					(click)="removeFollowedApp(name)"
+				>
+					<i class="ph ph-x" aria-hidden="true"></i>
+				</button>
+			</span>
+		} @empty {
+			<span class="hint">Not following any app yet.</span>
+		}
+	</div>
+	<form class="custom" (submit)="$event.preventDefault(); addCustomApp()">
+		<input
+			type="text"
+			autocapitalize="off"
+			placeholder="Add by name or bundle id, e.g. com.spotify.client"
+			[ngModel]="customAppName()"
+			(ngModelChange)="customAppName.set($event)"
+			name="customApp"
+		/>
+		<button type="submit" class="primary" [disabled]="!customAppName().trim()">Add</button>
+	</form>
+	<sd-app-picker [selected]="followedApps()" (picked)="onAppPicked($event)" />
+} @else if (iconPickerProfileId()) {
+	<button type="button" class="back" (click)="iconPickerProfileId.set(null)">
+		<i class="ph ph-arrow-left" aria-hidden="true"></i> Back to pages
+	</button>
+	<sd-icon-picker (picked)="onIconPicked($event)" />
+} @else {
+	<p class="hint">
+		Swipe up or down on the deck to move between pages. Each page holds its own buttons, for
+		example Music or Coding.
+	</p>
+	<ul class="list">
+		@for (profile of profiles(); track profile.id; let i = $index; let last = $last) {
+			<li class="row" [class.row--active]="profile.id === activeProfileId()">
+				<button
+					type="button"
+					class="row__icon"
+					aria-label="Change page icon"
+					(click)="iconPickerProfileId.set(profile.id)"
+				>
+					@if (profile.icon?.source === 'emoji') {
+						<span>{{ emojiOf(profile.icon) }}</span>
+					} @else {
+						<i [class]="iconClass(profile)" aria-hidden="true"></i>
+					}
+				</button>
+				@if (renamingProfileId() === profile.id) {
+					<input
+						type="text"
+						class="row__input"
+						[ngModel]="renameDraft()"
+						(ngModelChange)="renameDraft.set($event)"
+						(keydown.enter)="commitRename()"
+						(blur)="commitRename()"
+						name="rename"
+					/>
+				} @else {
+					<button type="button" class="row__name" (click)="selected.emit(profile.id)">
+						{{ profile.name }}
+						<span class="row__count">
+							{{ profile.buttons.length }} buttons ·
+							{{ paletteName(profile.palette) }}
+							@if (profile.appMatch) {
+								· follows {{ followedAppsSummary(profile.appMatch) }}
+							}
+						</span>
+					</button>
+				}
+				<span class="row__tools">
+					@if (renamingProfileId() !== profile.id) {
+						<button
+							type="button"
+							class="icon-button"
+							aria-label="Rename"
+							(click)="startRename(profile)"
+						>
+							<i class="ph ph-pencil-simple" aria-hidden="true"></i>
+						</button>
+					}
+					<button
+						type="button"
+						class="icon-button"
+						aria-label="Color palette"
+						(click)="paletteRequested.emit(profile.id)"
+					>
+						<i class="ph ph-palette" aria-hidden="true"></i>
+					</button>
+					<button
+						type="button"
+						class="icon-button"
+						[class.icon-button--on]="!!profile.appMatch"
+						[attr.aria-label]="followLabel(profile)"
+						[title]="followLabel(profile)"
+						(click)="followAppsProfileId.set(profile.id)"
+					>
+						<i
+							[class]="
+								profile.appMatch ? 'ph-fill ph-app-window' : 'ph ph-app-window'
+							"
+							aria-hidden="true"
+						></i>
+					</button>
+					<button
+						type="button"
+						class="icon-button"
+						aria-label="Move up"
+						[disabled]="i === 0"
+						(click)="moved.emit({ id: profile.id, index: i - 1 })"
+					>
+						<i class="ph ph-caret-up" aria-hidden="true"></i>
+					</button>
+					<button
+						type="button"
+						class="icon-button"
+						aria-label="Move down"
+						[disabled]="last"
+						(click)="moved.emit({ id: profile.id, index: i + 1 })"
+					>
+						<i class="ph ph-caret-down" aria-hidden="true"></i>
+					</button>
+					<button
+						type="button"
+						class="icon-button icon-button--danger"
+						[attr.aria-label]="
+							confirmingDeleteId() === profile.id ? 'Confirm delete' : 'Delete'
+						"
+						(click)="requestDelete(profile.id)"
+					>
+						<i
+							[class]="
+								confirmingDeleteId() === profile.id ? 'ph ph-check' : 'ph ph-trash'
+							"
+							aria-hidden="true"
+						></i>
+					</button>
+				</span>
+			</li>
+		}
+	</ul>
+	<button type="button" class="create primary" (click)="addRequested.emit()">
+		<i class="ph ph-plus" aria-hidden="true"></i> Add page
+	</button>
+}

@@ -1,0 +1,112 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply block;
+}
+
+.back {
+	@apply mb-3 sd-back-link;
+}
+
+input,
+select,
+textarea {
+	@apply sd-input;
+}
+
+select {
+	@apply sd-select;
+}
+
+textarea {
+	@apply resize-y;
+}
+
+.actions {
+	@apply m-0 flex list-none flex-col gap-2.5 p-0;
+}
+
+.action {
+	@apply flex flex-col gap-2 rounded-sd bg-bg p-2.5;
+}
+
+.empty {
+	@apply p-2.5 text-[13px] text-faint;
+}
+
+.action__header {
+	@apply flex items-center gap-1;
+}
+
+.action__kind {
+	@apply flex-1 text-[13px] font-semibold;
+}
+
+.icon-button {
+	@apply sd-icon-button;
+}
+
+.icon-button:disabled {
+	@apply opacity-35;
+}
+
+.icon-button--danger {
+	@apply text-danger-text;
+}
+
+.modifiers,
+.add-actions {
+	@apply flex flex-wrap gap-1.5;
+}
+
+.add-actions {
+	@apply mt-2.5;
+}
+
+.chip {
+	@apply sd-chip;
+}
+
+.chip--active {
+	@apply border-accent bg-accent text-accent-text;
+}
+
+.with-button {
+	@apply flex gap-2;
+}
+
+.row {
+	@apply flex flex-wrap gap-2;
+}
+
+.row select {
+	@apply min-w-[120px] flex-1;
+}
+
+.with-button input {
+	@apply min-w-0 flex-1;
+}
+
+.secondary {
+	@apply sd-btn-secondary shrink-0 justify-start px-3 py-2;
+}
+
+.field {
+	@apply flex flex-col gap-1 text-[13px] text-muted;
+}
+
+.check {
+	@apply flex items-center gap-2 text-[13px] text-muted;
+}
+
+.check input {
+	@apply size-[18px];
+}
+
+.inline {
+	@apply flex items-center gap-2 text-[14px];
+}
+
+.inline input {
+	@apply w-[120px];
+}

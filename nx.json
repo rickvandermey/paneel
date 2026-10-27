@@ -1,0 +1,123 @@
+{
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"namedInputs": {
+		"default": ["{projectRoot}/**/*", "sharedGlobals"],
+		"production": [
+			"default",
+			"!{projectRoot}/.eslintrc.json",
+			"!{projectRoot}/eslint.config.mjs",
+			"!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+			"!{projectRoot}/tsconfig.spec.json",
+			"!{projectRoot}/src/test-setup.[jt]s",
+			"!{projectRoot}/jest.config.[jt]s",
+			"!{projectRoot}/test-setup.[jt]s"
+		],
+		"sharedGlobals": [
+			"{workspaceRoot}/.nvmrc",
+			"{workspaceRoot}/go.work",
+			"{workspaceRoot}/tsconfig.base.json"
+		]
+	},
+	"targetDefaults": {
+		"@angular/build:application": {
+			"cache": true,
+			"dependsOn": ["^build"],
+			"inputs": ["production", "^production"]
+		},
+		"bddgen": {
+			"cache": true,
+			"executor": "nx:run-commands",
+			"defaultConfiguration": "all",
+			"configurations": {
+				"all": {
+					"command": "pnpm exec bddgen -c {projectRoot}/playwright.config.ts"
+				},
+				"smoke": {
+					"command": "pnpm exec bddgen -c {projectRoot}/playwright.config.ts --tags='@smoke'"
+				}
+			},
+			"outputs": ["{projectRoot}/src/features-gen"]
+		},
+		"e2e:ci": {
+			"cache": true,
+			"executor": "nx:run-commands",
+			"defaultConfiguration": "all",
+			"dependsOn": [
+				{
+					"target": "bddgen",
+					"params": "forward"
+				}
+			],
+			"inputs": ["default"],
+			"configurations": {
+				"all": {
+					"command": "pnpm exec playwright test -c {projectRoot}/playwright.config.ts"
+				},
+				"smoke": {
+					"command": "pnpm exec playwright test -c {projectRoot}/playwright.config.ts --pass-with-no-tests"
+				}
+			},
+			"outputs": ["{workspaceRoot}/test-reports/{projectRoot}"]
+		}
+	},
+	"plugins": [
+		{
+			"plugin": "@nx/playwright/plugin",
+			"options": {
+				"targetName": "e2e"
+			}
+		},
+		{
+			"plugin": "@nx/eslint/plugin",
+			"options": {
+				"targetName": "lint"
+			}
+		},
+		{
+			"plugin": "@nx/js/typescript",
+			"options": {
+				"typecheck": {
+					"targetName": "typecheck"
+				}
+			}
+		},
+		{
+			"plugin": "@nx/vite/plugin",
+			"options": {
+				"buildTargetName": "build",
+				"serveTargetName": "serve",
+				"devTargetName": "dev",
+				"previewTargetName": "preview",
+				"serveStaticTargetName": "serve-static",
+				"typecheckTargetName": "typecheck",
+				"buildDepsTargetName": "build-deps",
+				"watchDepsTargetName": "watch-deps"
+			}
+		},
+		{
+			"plugin": "@nx/vitest",
+			"options": {
+				"testTargetName": "test"
+			}
+		}
+	],
+	"generators": {
+		"@nx/angular:application": {
+			"e2eTestRunner": "none",
+			"linter": "eslint",
+			"style": "css",
+			"unitTestRunner": "vitest-analog",
+			"prefix": "sd"
+		},
+		"@nx/angular:library": {
+			"linter": "eslint",
+			"unitTestRunner": "vitest-analog",
+			"prefix": "sd"
+		},
+		"@nx/angular:component": {
+			"style": "css"
+		}
+	},
+	"analytics": false,
+	"defaultBase": "main"
+}

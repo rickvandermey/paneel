@@ -1,0 +1,29 @@
+@let icon = look().icon;
+<span class="key__icon" aria-hidden="true">
+	@switch (icon?.source) {
+		@case ('asset') {
+			<img class="key__image" [src]="assetUrl()(assetHash())" alt="" draggable="false" />
+		}
+		@case ('phosphor') {
+			<i [class]="phosphorClass()"></i>
+		}
+		@case ('emoji') {
+			<span class="key__emoji">{{ emojiValue() }}</span>
+		}
+		@default {
+			<span class="key__initial">{{ fallbackInitial() }}</span>
+		}
+	}
+</span>
+@if (button().showLabel && look().label) {
+	<span class="key__label">{{ look().label }}</span>
+}
+@if (button().toggle) {
+	<span class="key__state" aria-hidden="true"></span>
+}
+@if (button().folder) {
+	<i class="key__folder ph-fill ph-folder-simple" aria-hidden="true"></i>
+}
+@if (editing() && !isVirtualKey()) {
+	<i class="key__edit ph-bold ph-pencil-simple" aria-hidden="true"></i>
+}

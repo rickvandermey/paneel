@@ -1,0 +1,21 @@
+@if (enteredPairingUrl() && client.status() !== 'unpaired') {
+	<sd-shell [canDisconnect]="true" (disconnected)="forgetComputer()" />
+} @else {
+	<main class="pair">
+		<h1>Pair with your computer</h1>
+		@if (client.status() === 'unpaired' && client.error(); as error) {
+			<p class="error">{{ error }}</p>
+		}
+		<p>Scan the QR code in the desktop app, or paste the pairing URL it shows.</p>
+		<input
+			type="url"
+			inputmode="url"
+			autocapitalize="off"
+			autocomplete="off"
+			placeholder="http://192.168.1.10:48220/?token=..."
+			[ngModel]="enteredPairingUrl()"
+			(ngModelChange)="enteredPairingUrl.set($event)"
+		/>
+		<button type="button" (click)="connect()">Connect</button>
+	</main>
+}

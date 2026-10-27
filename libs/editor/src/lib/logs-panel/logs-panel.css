@@ -1,0 +1,86 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply flex min-h-0 flex-col gap-3;
+}
+
+.hint {
+	@apply sd-hint;
+}
+
+.error {
+	@apply sd-error;
+}
+
+.toolbar {
+	@apply flex items-center gap-2;
+}
+
+.toolbar select {
+	@apply sd-input min-w-0 flex-1 sd-select;
+}
+
+.check {
+	@apply flex shrink-0 items-center gap-1.5 text-[13px] text-muted;
+}
+
+.check input {
+	@apply size-[18px];
+}
+
+.icon-button {
+	@apply sd-icon-button;
+}
+
+.lines {
+	@apply m-0 flex max-h-[50dvh] min-h-[160px] list-none flex-col gap-0.5 overflow-auto rounded-sd bg-bg p-2 text-[12px] leading-snug;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.line {
+	@apply flex gap-2 whitespace-pre-wrap;
+}
+
+.line__time {
+	@apply shrink-0 text-faint;
+}
+
+.line__source {
+	@apply w-9 shrink-0 text-faint;
+}
+
+.line__text {
+	@apply min-w-0 break-words;
+}
+
+.line__fields {
+	@apply text-muted;
+}
+
+.line[data-level='warn'] .line__text {
+	@apply text-warning;
+}
+
+.line[data-level='error'] .line__text {
+	@apply text-danger-text;
+}
+
+.line[data-level='debug'] .line__text {
+	@apply text-muted;
+}
+
+.line--empty {
+	@apply text-faint;
+}
+
+.row {
+	@apply flex flex-wrap gap-2;
+}
+
+.secondary {
+	@apply sd-btn-secondary px-3 py-2;
+}
+
+.danger {
+	@apply sd-btn-danger px-3 py-2;
+}

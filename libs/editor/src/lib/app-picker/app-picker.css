@@ -1,0 +1,47 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply block;
+}
+
+input {
+	@apply mb-2.5 sd-input;
+}
+
+.hint {
+	@apply sd-hint mb-2.5;
+}
+
+.error {
+	@apply sd-error;
+}
+
+.list {
+	@apply m-0 flex list-none flex-col gap-1 p-0;
+}
+
+.app {
+	@apply flex w-full items-center gap-2.5 rounded-sd border-0 bg-surface-2 px-2.5 py-2 text-left text-text;
+	@apply sd-font-inherit;
+}
+
+.app--selected {
+	background: color-mix(in srgb, var(--sd-accent) 28%, var(--sd-surface-2));
+	box-shadow: 0 0 0 1px var(--sd-accent) inset;
+}
+
+.app__text {
+	@apply flex min-w-0 flex-1 flex-col gap-0.5;
+}
+
+.app__check {
+	@apply shrink-0 text-[18px] text-accent-soft;
+}
+
+.app__name {
+	@apply font-semibold;
+}
+
+.app__path {
+	@apply max-w-full truncate text-[11px] text-faint;
+}

@@ -1,0 +1,257 @@
+<header class="bar">
+	<button type="button" class="bar__menu" aria-label="Menu" (click)="panel.set('menu')">
+		<i class="ph ph-list" aria-hidden="true"></i>
+	</button>
+	<nav class="chips" aria-label="Pages">
+		@for (entry of profiles(); track entry.id; let i = $index) {
+			<button
+				type="button"
+				class="chip"
+				[class.chip--active]="i === profileIndex()"
+				(click)="profileIndex.set(i)"
+			>
+				{{ entry.name }}
+			</button>
+		}
+	</nav>
+	@if (editing()) {
+		<button type="button" class="bar__done" (click)="editing.set(false)">
+			<i class="ph ph-check" aria-hidden="true"></i> Done
+		</button>
+	} @else {
+		<span class="bar__status" [attr.data-status]="client.status()"></span>
+		@if (client.networkMs() !== null) {
+			<span class="bar__metric" title="Network round trip">{{ client.networkMs() }} ms</span>
+		}
+		@if (client.lastExecutionMs() !== null) {
+			<span class="bar__metric bar__metric--muted" title="Action execution"
+				>+{{ client.lastExecutionMs() }}</span
+			>
+		}
+	}
+</header>
+
+@if (client.error(); as error) {
+	<p class="error">{{ error }}</p>
+}
+@if (profile(); as current) {
+	<main class="deck" [class.deck--editing]="editing()" [style.background]="palette().tint">
+		<sd-deck
+			[profile]="current"
+			[activeButtonId]="activeButtonId()"
+			[assetUrl]="assetUrl"
+			[editing]="editing()"
+			[buttonStates]="client.buttonStates()"
+			(pressed)="onPressed($event)"
+			(editRequested)="onEditRequested($event)"
+			(addRequested)="onAddRequested($event)"
+			(moveRequested)="onMoveRequested($event)"
+			(profileSwipe)="onProfileSwipe($event)"
+		/>
+	</main>
+} @else {
+	<main class="empty">
+		<sd-welcome
+			[connected]="isReady()"
+			[platform]="platform()"
+			[theme]="theme()"
+			(addPage)="panel.set('page-presets')"
+			(restoreSample)="restoreSamplePage()"
+			(examplePressed)="onExamplePressed($event)"
+		/>
+	</main>
+}
+@if (toast(); as toast) {
+	<div class="toast" role="status">
+		<span>{{ toast.message }}</span>
+		@if (toast.action; as action) {
+			<button type="button" class="toast__action" (click)="toasts.runAction()">
+				{{ action.label }}
+			</button>
+		}
+	</div>
+}
+@switch (panel()) {
+	@case ('menu') {
+		<sd-menu
+			[profiles]="profiles()"
+			[activeProfileId]="profile()?.id ?? null"
+			[editing]="editing()"
+			[status]="client.status()"
+			[hostName]="client.hostInfo()?.hostName ?? ''"
+			(selected)="onMenu($event)"
+			(profileSelected)="selectProfile($event)"
+			(closed)="panel.set(null)"
+		/>
+	}
+	@case ('button') {
+		<sd-sheet
+			[title]="editTarget()?.button ? 'Edit button' : 'New button'"
+			(closed)="closePanel()"
+		>
+			<sd-button-editor
+				[button]="editTarget()?.button ?? null"
+				[profiles]="profiles()"
+				[platform]="platform()"
+				[assetUrl]="assetUrl"
+				[paletteColors]="palette().colors"
+				[defaultColor]="nextColor()"
+				[canMoveBack]="canMoveBack()"
+				[canMoveForward]="canMoveForward()"
+				(saved)="onDraftSaved($event)"
+				(deleted)="onDraftDeleted()"
+				(tried)="onDraftTried($event)"
+				(moved)="onDraftMoved($event)"
+				(openFolder)="onOpenFolder()"
+				(cancelled)="closePanel()"
+			/>
+		</sd-sheet>
+	}
+	@case ('catalog') {
+		<sd-sheet title="Standard buttons" (closed)="closePanel()">
+			<sd-catalog
+				[platform]="platform()"
+				[assetUrl]="assetUrl"
+				[installedApps]="installedApps()"
+				(added)="onPresetAdded($event)"
+			/>
+		</sd-sheet>
+	}
+	@case ('app-catalog') {
+		<sd-sheet title="App buttons" (closed)="closePanel()">
+			<sd-app-catalog
+				[platform]="platform()"
+				[assetUrl]="assetUrl"
+				[installedApps]="installedApps()"
+				(added)="onPresetAdded($event)"
+				(addedAll)="onPresetsAdded($event)"
+			/>
+		</sd-sheet>
+	}
+	@case ('profiles') {
+		<sd-sheet title="Pages" (closed)="closePanel()">
+			<sd-profiles-panel
+				[profiles]="profiles()"
+				[activeProfileId]="profile()?.id ?? null"
+				[customPalettes]="customPalettes()"
+				(selected)="selectProfile($event)"
+				(addRequested)="panel.set('page-presets')"
+				(renamed)="onProfileRenamed($event)"
+				(iconChanged)="onProfileIconChanged($event)"
+				(moved)="onProfileMoved($event)"
+				(deleted)="onProfileDeleted($event)"
+				(paletteRequested)="onPaletteRequested($event)"
+				(appMatchChanged)="onProfileAppMatchChanged($event)"
+			/>
+		</sd-sheet>
+	}
+	@case ('page-presets') {
+		<sd-sheet title="Add page" (closed)="panel.set('profiles')">
+			<sd-page-presets-panel
+				[installedApps]="installedApps()"
+				(presetChosen)="onPagePresetChosen($event)"
+				(blankChosen)="onProfileCreated($event)"
+			/>
+		</sd-sheet>
+	}
+	@case ('palette') {
+		<sd-sheet title="Page palette" (closed)="panel.set('profiles')">
+			<sd-palette-panel
+				[pageName]="paletteProfile()?.name ?? ''"
+				[activePaletteId]="paletteProfile()?.palette || noPalette"
+				[buttons]="paletteProfile()?.buttons ?? []"
+				[assetUrl]="assetUrl"
+				[customPalettes]="customPalettes()"
+				[canUndo]="recolorUndo()?.pageName === paletteProfile()?.name"
+				(selected)="onPaletteSelected($event)"
+				(recolorRequested)="onRecolorRequested()"
+				(undoRequested)="undoRecolor()"
+				(createRequested)="openPaletteEditor(null)"
+				(editRequested)="openPaletteEditor($event)"
+				(deleteRequested)="onCustomPaletteDeleted($event)"
+			/>
+		</sd-sheet>
+	}
+	@case ('palette-editor') {
+		<sd-sheet
+			[title]="editingPalette() ? 'Edit palette' : 'New palette'"
+			(closed)="panel.set('palette')"
+		>
+			<sd-palette-editor
+				[palette]="editingPalette()"
+				(saved)="onCustomPaletteSaved($event)"
+				(cancelled)="panel.set('palette')"
+			/>
+		</sd-sheet>
+	}
+	@case ('theme') {
+		<sd-sheet title="Theme" (closed)="closePanel()">
+			<sd-theme-panel
+				[activeTheme]="theme()"
+				[customThemes]="customThemes()"
+				(selected)="onThemeChanged($event)"
+				(createRequested)="openThemeEditor(null)"
+				(editRequested)="openThemeEditor($event)"
+				(deleteRequested)="onCustomThemeDeleted($event)"
+			/>
+		</sd-sheet>
+	}
+	@case ('theme-editor') {
+		<sd-sheet
+			[title]="editingTheme() ? 'Edit theme' : 'New theme'"
+			(closed)="panel.set('theme')"
+		>
+			<sd-theme-editor
+				[theme]="editingTheme()"
+				(saved)="onCustomThemeSaved($event)"
+				(cancelled)="panel.set('theme')"
+			/>
+		</sd-sheet>
+	}
+	@case ('settings') {
+		<sd-sheet title="Settings" (closed)="closePanel()">
+			<sd-settings-panel
+				[settings]="settings()"
+				[host]="client.hostInfo()"
+				[status]="client.status()"
+				[networkMs]="client.networkMs()"
+				[executionMs]="client.lastExecutionMs()"
+				[revision]="client.revision()"
+				[port]="client.port()"
+				[activeApp]="client.activeApp()"
+				[canDisconnect]="canDisconnect()"
+				[backupUrl]="client.backupUrl()"
+				(terminalChanged)="onTerminalChanged($event)"
+				(smartPagesChanged)="onSmartPagesChanged($event)"
+				(resetRequested)="onResetRequested()"
+				(restoreRequested)="onRestoreRequested($event)"
+				(networkChanged)="onNetworkChanged($event)"
+				(disconnected)="disconnected.emit()"
+				(logsRequested)="panel.set('logs')"
+				(assistantChanged)="onAssistantSettingsChanged($event)"
+			/>
+		</sd-sheet>
+	}
+	@case ('assistant') {
+		<sd-sheet title="Build a page with AI" (closed)="closePanel()">
+			<sd-assistant-panel
+				[platform]="platform()"
+				[profiles]="profiles()"
+				[currentProfile]="profile()"
+				[installedApps]="installedApps()"
+				[assetUrl]="assetUrl"
+				(applied)="onPlanApplied($event)"
+				(settingsRequested)="panel.set('settings')"
+			/>
+		</sd-sheet>
+	}
+	@case ('logs') {
+		<sd-sheet title="Logs" (closed)="panel.set('settings')">
+			<sd-logs-panel
+				[verbose]="settings()?.verboseLogging ?? false"
+				(verboseChanged)="onVerboseLoggingChanged($event)"
+				(notice)="showToast($event)"
+			/>
+		</sd-sheet>
+	}
+}

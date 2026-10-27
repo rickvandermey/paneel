@@ -1,0 +1,134 @@
+<div class="preview" [attr.data-theme]="base()" [attr.style]="previewStyle()">
+	<div class="preview__bar">
+		<span class="preview__chip preview__chip--active">Page</span>
+		<span class="preview__chip">Other</span>
+	</div>
+	<div class="preview__keys">
+		@for (sample of samples; track sample.id) {
+			<sd-deck-key [button]="sample" />
+		}
+	</div>
+	<div class="preview__panel">
+		<span class="preview__title">Panel</span>
+		<span class="preview__muted">Muted text and a</span>
+		<span class="preview__button">Button</span>
+	</div>
+</div>
+
+<label class="field">
+	<span>Name</span>
+	<input
+		type="text"
+		placeholder="My theme"
+		[ngModel]="name()"
+		(ngModelChange)="name.set($event)"
+		name="themeName"
+	/>
+</label>
+<label class="field">
+	<span>Start from</span>
+	<select [ngModel]="base()" (ngModelChange)="startFrom($event)" name="base">
+		@for (entry of bases; track entry.id) {
+			<option [value]="entry.id">{{ entry.name }}</option>
+		}
+	</select>
+</label>
+
+<h3 class="section">Colors</h3>
+<div class="colors">
+	<label class="color">
+		<input type="color" [ngModel]="bg()" (ngModelChange)="bg.set($event)" name="bg" />
+		<span>Background</span>
+	</label>
+	<label class="color">
+		<input
+			type="color"
+			[ngModel]="surface()"
+			(ngModelChange)="surface.set($event)"
+			name="surface"
+		/>
+		<span>Panels</span>
+	</label>
+	<label class="color">
+		<input type="color" [ngModel]="text()" (ngModelChange)="text.set($event)" name="text" />
+		<span>Text</span>
+	</label>
+	<label class="color">
+		<input
+			type="color"
+			[ngModel]="accent()"
+			(ngModelChange)="accent.set($event)"
+			name="accent"
+		/>
+		<span>Accent</span>
+	</label>
+	<label class="color">
+		<input
+			type="color"
+			[ngModel]="light() || '#000000'"
+			(ngModelChange)="light.set($event)"
+			name="light"
+		/>
+		<span>Glow</span>
+		@if (light()) {
+			<button type="button" class="clear" (click)="light.set('')">Remove</button>
+		} @else {
+			<span class="color__hint">Optional</span>
+		}
+	</label>
+</div>
+
+<h3 class="section">Shape</h3>
+<label class="slider">
+	<span
+		>Key rounding <strong>{{ keyRadius() }}%</strong></span
+	>
+	<input
+		type="range"
+		min="0"
+		max="50"
+		step="1"
+		[ngModel]="keyRadius()"
+		(ngModelChange)="keyRadius.set(+$event)"
+		name="keyRadius"
+	/>
+</label>
+<label class="slider">
+	<span
+		>Key opacity <strong>{{ keyMix() }}%</strong></span
+	>
+	<input
+		type="range"
+		min="40"
+		max="100"
+		step="1"
+		[ngModel]="keyMix()"
+		(ngModelChange)="keyMix.set(+$event)"
+		name="keyMix"
+	/>
+</label>
+<label class="slider">
+	<span
+		>Panel blur <strong>{{ blur() }} px</strong></span
+	>
+	<input
+		type="range"
+		min="0"
+		max="30"
+		step="1"
+		[ngModel]="blur()"
+		(ngModelChange)="blur.set(+$event)"
+		name="blur"
+	/>
+</label>
+<p class="hint">
+	Lower key opacity and panel blur turn the theme into glass; add a glow color to put light behind
+	it.
+</p>
+
+<footer class="footer">
+	<button type="button" class="secondary" (click)="cancelled.emit()">Cancel</button>
+	<button type="button" class="primary" [disabled]="!valid()" (click)="save()">
+		{{ theme() ? 'Save theme' : 'Create theme' }}
+	</button>
+</footer>

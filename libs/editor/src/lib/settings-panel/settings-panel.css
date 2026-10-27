@@ -1,0 +1,84 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply block;
+}
+
+/* Every section has the same rhythm: a heading, one line of explanation, then its fields. */
+.group {
+	@apply flex flex-col gap-2.5;
+}
+
+.group + .group {
+	@apply mt-[22px];
+}
+
+.section {
+	@apply m-0 sd-section;
+}
+
+.hint {
+	@apply m-0 text-[13px] text-faint;
+}
+
+select {
+	@apply sd-input sd-select;
+}
+
+.row {
+	@apply flex flex-wrap items-end gap-2;
+}
+
+.row > .secondary,
+.row > .danger {
+	@apply flex-auto justify-center;
+}
+
+.field {
+	@apply flex flex-1 flex-col gap-1 text-[13px] text-muted;
+}
+
+.field input {
+	@apply sd-input;
+}
+
+.secondary {
+	@apply sd-btn-secondary justify-start whitespace-nowrap;
+}
+
+a.secondary,
+label.secondary {
+	@apply cursor-pointer no-underline;
+}
+
+.secondary:disabled {
+	@apply opacity-40;
+}
+
+.danger {
+	@apply sd-btn-danger justify-start;
+}
+
+.facts {
+	@apply m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[14px];
+}
+
+.facts dt {
+	@apply text-muted;
+}
+
+.facts dd {
+	@apply m-0;
+}
+
+.facts dd.status {
+	@apply capitalize;
+}
+
+.check {
+	@apply flex items-center gap-2 text-[13px] text-muted;
+}
+
+.check input {
+	@apply size-[18px];
+}

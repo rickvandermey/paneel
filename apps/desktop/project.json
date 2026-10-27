@@ -1,0 +1,85 @@
+{
+	"name": "desktop",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"projectType": "application",
+	"prefix": "sd",
+	"sourceRoot": "apps/desktop/src",
+	"tags": ["type:app", "scope:desktop"],
+	"targets": {
+		"build": {
+			"executor": "@angular/build:application",
+			"outputs": ["{options.outputPath}"],
+			"defaultConfiguration": "production",
+			"options": {
+				"outputPath": {
+					"base": "apps/host/frontend/dist",
+					"browser": ""
+				},
+				"browser": "apps/desktop/src/main.ts",
+				"tsConfig": "apps/desktop/tsconfig.app.json",
+				"assets": [
+					{
+						"glob": "**/*",
+						"input": "apps/desktop/public"
+					}
+				],
+				"styles": ["apps/desktop/src/styles.css"]
+			},
+			"configurations": {
+				"production": {
+					"budgets": [
+						{
+							"type": "initial",
+							"maximumWarning": "700kb",
+							"maximumError": "1.2mb"
+						},
+						{
+							"type": "anyComponentStyle",
+							"maximumWarning": "8kb",
+							"maximumError": "16kb"
+						}
+					],
+					"outputHashing": "all"
+				},
+				"development": {
+					"optimization": false,
+					"extractLicenses": false,
+					"sourceMap": true
+				}
+			}
+		},
+		"serve": {
+			"continuous": true,
+			"readyWhen": {
+				"signal": true
+			},
+			"executor": "@angular/build:dev-server",
+			"defaultConfiguration": "development",
+			"configurations": {
+				"production": {
+					"buildTarget": "desktop:build:production"
+				},
+				"development": {
+					"buildTarget": "desktop:build:development"
+				}
+			},
+			"options": {
+				"port": 4200,
+				"host": "0.0.0.0"
+			}
+		},
+		"serve-static": {
+			"continuous": true,
+			"readyWhen": {
+				"signal": true
+			},
+			"dependsOn": ["build"],
+			"executor": "@nx/web:file-server",
+			"options": {
+				"buildTarget": "desktop:build",
+				"staticFilePath": "apps/host/frontend/dist",
+				"spa": true
+			}
+		}
+	}
+}

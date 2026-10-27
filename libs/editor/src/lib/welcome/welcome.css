@@ -1,0 +1,72 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply block h-full overflow-y-auto;
+}
+
+.welcome {
+	@apply mx-auto flex max-w-[520px] flex-col gap-3.5 px-4 pt-3 pb-8;
+}
+
+.eyebrow {
+	@apply m-0 sd-group-label;
+}
+
+.examples {
+	@apply grid grid-cols-3 gap-2.5;
+}
+
+@media (min-width: 600px) {
+	.examples {
+		@apply grid-cols-6;
+	}
+}
+
+.title {
+	@apply mt-2 mb-0 text-[24px];
+	@apply sd-heading;
+}
+
+.lead {
+	@apply m-0 text-[15px] leading-[1.45] text-muted;
+}
+
+.steps {
+	@apply m-0 flex list-none flex-col gap-2.5 p-0;
+}
+
+.steps li {
+	@apply flex gap-3 rounded-sd-lg bg-surface p-3 text-[14px] leading-[1.4];
+	@apply sd-surface-border;
+}
+
+.steps i {
+	@apply shrink-0 text-[22px] text-accent-soft;
+}
+
+.actions {
+	@apply mt-1.5 flex flex-col gap-2;
+}
+
+.primary {
+	@apply sd-btn-primary gap-2 px-4 py-[13px] text-[15px];
+}
+
+.secondary {
+	@apply sd-btn-secondary gap-2 px-4 py-[13px] text-[15px];
+}
+
+.primary:disabled,
+.secondary:disabled {
+	@apply opacity-50;
+}
+
+.hint {
+	@apply m-0 text-[13px] text-faint;
+}
+
+@media (min-width: 900px) {
+	.welcome {
+		@apply max-w-[640px] pt-10;
+	}
+}

@@ -1,0 +1,85 @@
+{
+	"name": "mobile",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"projectType": "application",
+	"prefix": "sd",
+	"sourceRoot": "apps/mobile/src",
+	"tags": ["type:app", "scope:mobile"],
+	"targets": {
+		"build": {
+			"executor": "@angular/build:application",
+			"outputs": ["{options.outputPath}"],
+			"defaultConfiguration": "production",
+			"options": {
+				"outputPath": {
+					"base": "apps/host/static/deck",
+					"browser": ""
+				},
+				"browser": "apps/mobile/src/main.ts",
+				"tsConfig": "apps/mobile/tsconfig.app.json",
+				"assets": [
+					{
+						"glob": "**/*",
+						"input": "apps/mobile/public"
+					}
+				],
+				"styles": ["apps/mobile/src/styles.css"]
+			},
+			"configurations": {
+				"production": {
+					"budgets": [
+						{
+							"type": "initial",
+							"maximumWarning": "700kb",
+							"maximumError": "1.2mb"
+						},
+						{
+							"type": "anyComponentStyle",
+							"maximumWarning": "8kb",
+							"maximumError": "16kb"
+						}
+					],
+					"outputHashing": "all"
+				},
+				"development": {
+					"optimization": false,
+					"extractLicenses": false,
+					"sourceMap": true
+				}
+			}
+		},
+		"serve": {
+			"continuous": true,
+			"readyWhen": {
+				"signal": true
+			},
+			"executor": "@angular/build:dev-server",
+			"defaultConfiguration": "development",
+			"configurations": {
+				"production": {
+					"buildTarget": "mobile:build:production"
+				},
+				"development": {
+					"buildTarget": "mobile:build:development"
+				}
+			},
+			"options": {
+				"port": 4300,
+				"host": "0.0.0.0"
+			}
+		},
+		"serve-static": {
+			"continuous": true,
+			"readyWhen": {
+				"signal": true
+			},
+			"dependsOn": ["build"],
+			"executor": "@nx/web:file-server",
+			"options": {
+				"buildTarget": "mobile:build",
+				"staticFilePath": "apps/host/static/deck",
+				"spa": true
+			}
+		}
+	}
+}

@@ -1,0 +1,289 @@
+@if (pickingAppForIndex() !== null) {
+	<button type="button" class="back" (click)="pickingAppForIndex.set(null)">
+		<i class="ph ph-arrow-left" aria-hidden="true"></i> Back to actions
+	</button>
+	<sd-app-picker (picked)="onAppPicked($event)" />
+} @else {
+	<ol class="actions">
+		@for (action of actions(); track $index; let i = $index) {
+			<li class="action">
+				<header class="action__header">
+					<span class="action__kind">{{ kindLabel(action.kind) }}</span>
+					<button
+						type="button"
+						class="icon-button"
+						aria-label="Move up"
+						[disabled]="i === 0"
+						(click)="moveAction(i, -1)"
+					>
+						<i class="ph ph-caret-up" aria-hidden="true"></i>
+					</button>
+					<button
+						type="button"
+						class="icon-button"
+						aria-label="Move down"
+						[disabled]="i === actions().length - 1"
+						(click)="moveAction(i, 1)"
+					>
+						<i class="ph ph-caret-down" aria-hidden="true"></i>
+					</button>
+					<button
+						type="button"
+						class="icon-button icon-button--danger"
+						aria-label="Remove action"
+						(click)="removeAction(i)"
+					>
+						<i class="ph ph-x" aria-hidden="true"></i>
+					</button>
+				</header>
+				@switch (action.kind) {
+					@case ('hotkey') {
+						<div class="modifiers">
+							@for (modifier of modifiers; track modifier) {
+								<button
+									type="button"
+									class="chip"
+									[class.chip--active]="hasModifier(action, modifier)"
+									(click)="toggleModifier(i, modifier)"
+								>
+									{{ modifierLabel()[modifier] }}
+								</button>
+							}
+						</div>
+						<input
+							type="text"
+							autocapitalize="off"
+							placeholder="Key, e.g. c, space, f5, up"
+							[ngModel]="action.key ?? ''"
+							(ngModelChange)="updateAction(i, { key: $event })"
+							[name]="'key' + i"
+						/>
+						<ng-container
+							*ngTemplateOutlet="
+								appTarget;
+								context: {
+									index: i,
+									action,
+									placeholder: 'Focus an app first (optional)',
+									field: 'hotkeyTarget',
+								}
+							"
+						/>
+					}
+					@case ('text') {
+						<textarea
+							rows="3"
+							placeholder="Text to type into the active window"
+							[ngModel]="action.text ?? ''"
+							(ngModelChange)="updateAction(i, { text: $event })"
+							[name]="'text' + i"
+						></textarea>
+					}
+					@case ('launch') {
+						<ng-container
+							*ngTemplateOutlet="
+								appTarget;
+								context: {
+									index: i,
+									action,
+									placeholder: 'App name, e.g. Google Chrome',
+									field: 'target',
+								}
+							"
+						/>
+					}
+					@case ('url') {
+						<input
+							type="url"
+							inputmode="url"
+							autocapitalize="off"
+							placeholder="https://"
+							[ngModel]="action.url ?? ''"
+							(ngModelChange)="updateAction(i, { url: $event })"
+							[name]="'url' + i"
+						/>
+					}
+					@case ('terminal') {
+						<label class="field">
+							<span>Command</span>
+							<input
+								type="text"
+								autocapitalize="off"
+								placeholder="e.g. claude or git status"
+								[ngModel]="action.command ?? ''"
+								(ngModelChange)="updateAction(i, { command: $event })"
+								[name]="'command' + i"
+							/>
+						</label>
+						<label class="field">
+							<span>Prompt for the program (optional)</span>
+							<input
+								type="text"
+								placeholder="e.g. run the tests and fix failures"
+								[ngModel]="action.prompt ?? ''"
+								(ngModelChange)="updateAction(i, { prompt: $event })"
+								[name]="'prompt' + i"
+							/>
+						</label>
+						<label class="field">
+							<span>Working directory (optional)</span>
+							<input
+								type="text"
+								autocapitalize="off"
+								placeholder="Defaults to the terminal's own directory"
+								[ngModel]="action.workDir ?? ''"
+								(ngModelChange)="updateAction(i, { workDir: $event })"
+								[name]="'workDir' + i"
+							/>
+						</label>
+						<select
+							[ngModel]="action.window === 'new' ? 'new' : 'reuse'"
+							(ngModelChange)="updateAction(i, { window: $event })"
+							[name]="'window' + i"
+						>
+							@for (entry of terminalWindows; track entry.value) {
+								<option [value]="entry.value">{{ entry.label }}</option>
+							}
+						</select>
+						<p class="hint">
+							With VS Code, Cursor, Zed or a JetBrains IDE in front, the command goes
+							to its integrated terminal; otherwise the open terminal window is reused
+							when it is idle. If the program is already running there, only the
+							prompt is sent.
+						</p>
+					}
+					@case ('shell') {
+						<label class="check">
+							<input
+								type="checkbox"
+								[ngModel]="!action.silent"
+								(ngModelChange)="updateAction(i, { silent: !$event })"
+								[name]="'notify' + i"
+							/>
+							<span>Show a notification when it finishes</span>
+						</label>
+						<input
+							type="text"
+							autocapitalize="off"
+							placeholder="Command"
+							[ngModel]="action.command ?? ''"
+							(ngModelChange)="updateAction(i, { command: $event })"
+							[name]="'command' + i"
+						/>
+						<input
+							type="text"
+							autocapitalize="off"
+							placeholder="Working directory (optional)"
+							[ngModel]="action.workDir ?? ''"
+							(ngModelChange)="updateAction(i, { workDir: $event })"
+							[name]="'workDir' + i"
+						/>
+					}
+					@case ('media') {
+						<select
+							[ngModel]="action.control"
+							(ngModelChange)="updateAction(i, { control: $event })"
+							[name]="'control' + i"
+						>
+							@for (entry of mediaControls; track entry.control) {
+								<option [value]="entry.control">{{ entry.label }}</option>
+							}
+						</select>
+					}
+					@case ('appControl') {
+						<div class="row">
+							<select
+								[ngModel]="action.app"
+								(ngModelChange)="updateAction(i, { app: $event })"
+								[name]="'app' + i"
+							>
+								@for (entry of appIds(); track entry.app) {
+									<option [value]="entry.app">{{ entry.label }}</option>
+								}
+							</select>
+							<select
+								[ngModel]="action.control"
+								(ngModelChange)="updateAction(i, { control: $event })"
+								[name]="'appControl' + i"
+							>
+								@for (entry of appControls; track entry.control) {
+									<option [value]="entry.control">{{ entry.label }}</option>
+								}
+							</select>
+							@if (isTwoState(action)) {
+								<select
+									[ngModel]="action.value ?? 'toggle'"
+									(ngModelChange)="updateAction(i, { value: $event })"
+									[name]="'appValue' + i"
+								>
+									@for (entry of appValues; track entry.value) {
+										<option [value]="entry.value">{{ entry.label }}</option>
+									}
+								</select>
+							}
+						</div>
+					}
+					@case ('delay') {
+						<label class="inline">
+							<input
+								type="number"
+								inputmode="numeric"
+								min="0"
+								step="50"
+								[ngModel]="action.millis ?? 0"
+								(ngModelChange)="updateAction(i, { millis: +$event })"
+								[name]="'millis' + i"
+							/>
+							<span>milliseconds</span>
+						</label>
+					}
+					@case ('switchProfile') {
+						<select
+							[ngModel]="action.profileId"
+							(ngModelChange)="updateAction(i, { profileId: $event })"
+							[name]="'profile' + i"
+						>
+							@for (profile of profiles(); track profile.id) {
+								<option [value]="profile.id">{{ profile.name }}</option>
+							}
+						</select>
+					}
+				}
+			</li>
+		} @empty {
+			<li class="empty">No actions yet. Add one below.</li>
+		}
+	</ol>
+	<div class="add-actions">
+		@for (entry of actionKinds; track entry.kind) {
+			<button type="button" class="chip" (click)="addAction(entry.kind)">
+				<i [class]="'ph ph-' + entry.icon" aria-hidden="true"></i>
+				{{ entry.label }}
+			</button>
+		}
+	</div>
+}
+
+<!-- The app field with its Choose button, shared by hotkey (app to focus) and launch (app to open). -->
+<ng-template
+	#appTarget
+	let-index="index"
+	let-action="action"
+	let-placeholder="placeholder"
+	let-field="field"
+>
+	<div class="with-button">
+		<input
+			type="text"
+			autocapitalize="off"
+			[placeholder]="placeholder"
+			[ngModel]="action.target ?? ''"
+			(ngModelChange)="updateAction(index, { target: $event })"
+			[name]="field + index"
+		/>
+		<button type="button" class="secondary" (click)="pickingAppForIndex.set(index)">
+			<i class="ph ph-list-magnifying-glass" aria-hidden="true"></i>
+			Choose
+		</button>
+	</div>
+</ng-template>

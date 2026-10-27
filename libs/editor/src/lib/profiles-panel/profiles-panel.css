@@ -1,0 +1,102 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply block;
+}
+
+.back {
+	@apply mb-3 sd-back-link;
+}
+
+.hint {
+	@apply sd-hint mb-3;
+}
+
+.list {
+	@apply m-0 flex list-none flex-col gap-1.5 p-0;
+}
+
+.row {
+	@apply flex flex-wrap items-center gap-1 rounded-sd bg-bg p-1.5;
+}
+
+.row--active {
+	@apply outline outline-1 outline-accent;
+}
+
+.row__icon {
+	@apply grid size-10 place-items-center rounded-sd border-0 bg-surface-2 text-[20px] text-text;
+}
+
+.row__name {
+	@apply flex min-w-0 flex-col items-start border-0 bg-transparent px-2 py-1 text-left text-[15px] font-semibold text-text;
+	@apply flex-[1_1_150px];
+	@apply font-[inherit];
+}
+
+.row__count {
+	@apply block max-w-full truncate text-[12px] font-normal text-faint;
+}
+
+/* The tool buttons move to their own line as a group when the row gets narrow. */
+.row__tools {
+	@apply ml-auto flex shrink-0 gap-0.5;
+}
+
+.row__input {
+	@apply min-w-0 flex-1 rounded-sd border border-border bg-surface px-2.5 py-2 text-[16px] text-text;
+	@apply font-[inherit];
+}
+
+.icon-button {
+	@apply sd-icon-button bg-transparent;
+}
+
+.icon-button:disabled {
+	@apply opacity-30;
+}
+
+.chips {
+	@apply mb-2.5 flex flex-wrap gap-1.5;
+}
+
+.chip {
+	@apply inline-flex items-center gap-1 rounded-pill bg-accent py-1.5 pr-1.5 pl-3 text-[13px] font-semibold text-accent-text;
+}
+
+.chip__remove {
+	@apply grid size-[22px] place-items-center rounded-full border-0 text-[12px] text-inherit;
+	background: color-mix(in srgb, var(--sd-accent-text) 20%, transparent);
+}
+
+.custom {
+	@apply mb-3 flex gap-2;
+}
+
+.custom input {
+	@apply sd-input min-w-0 flex-1;
+}
+
+.custom .primary {
+	@apply px-3.5 py-2.5;
+}
+
+.icon-button--on {
+	@apply text-accent-soft;
+}
+
+.icon-button--danger {
+	@apply text-danger-text;
+}
+
+.create {
+	@apply mt-4;
+}
+
+.primary {
+	@apply sd-btn-primary px-3.5 py-2.5 whitespace-nowrap;
+}
+
+.primary:disabled {
+	@apply opacity-50;
+}

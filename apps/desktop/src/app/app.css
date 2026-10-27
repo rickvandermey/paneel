@@ -1,0 +1,41 @@
+@reference '../../../../libs/styles/src/tailwind.css';
+
+.layout {
+	@apply flex h-screen;
+}
+
+.side {
+	@apply relative flex shrink-0 basis-[300px] flex-col gap-2 overflow-y-auto bg-surface p-5;
+}
+
+.side--collapsed {
+	@apply basis-14 px-2 py-3;
+}
+
+.side__toggle {
+	@apply grid size-9 shrink-0 place-items-center self-end rounded-sd border-0 bg-surface-2 text-[20px] text-text;
+}
+
+.main {
+	@apply min-w-0 flex-1;
+}
+
+h1 {
+	@apply m-0 text-[20px];
+}
+
+h2 {
+	@apply mt-3 mb-0 text-[15px];
+}
+
+.muted {
+	@apply m-0 text-[13px] text-muted;
+}
+
+.qr {
+	@apply my-2 block rounded-sd bg-white p-2;
+}
+
+.urls {
+	@apply m-0 pl-[18px] text-[12px] break-all;
+}

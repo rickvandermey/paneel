@@ -1,0 +1,13 @@
+@import '../../../libs/styles/src/tailwind.css';
+@source '.';
+@source '../../../libs/editor/src';
+@source '../../../libs/deck-ui/src';
+@source '../../../libs/styles/src';
+@import '@phosphor-icons/web/regular';
+@import '@phosphor-icons/web/bold';
+@import '@phosphor-icons/web/fill';
+
+html,
+body {
+	min-height: 100%;
+}

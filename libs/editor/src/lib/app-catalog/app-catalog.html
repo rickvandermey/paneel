@@ -1,0 +1,93 @@
+@if (selectedApp(); as app) {
+	<button type="button" class="back" (click)="selectedAppId.set(null)">
+		<i class="ph ph-arrow-left" aria-hidden="true"></i> Back to apps
+	</button>
+	<header class="app-header">
+		<i [class]="iconClass(app)" class="app-header__icon" aria-hidden="true"></i>
+		<div class="app-header__text">
+			<h3 class="app-header__name">{{ app.name }}</h3>
+			<p class="app-header__description">{{ app.description }}</p>
+		</div>
+		<button type="button" class="add-all" (click)="addAll(app)">
+			<i class="ph ph-plus" aria-hidden="true"></i> Add all
+		</button>
+	</header>
+	<p class="hint">Tap a button to add it to the current page. You can change it afterwards.</p>
+	<div class="grid">
+		@for (preset of app.buttons; track preset.label; let i = $index) {
+			<sd-deck-key
+				[button]="preview(preset, i)"
+				[assetUrl]="assetUrl()"
+				(pressed)="added.emit(preset)"
+			/>
+		}
+	</div>
+} @else {
+	<div class="toolbar">
+		<input
+			type="search"
+			class="search"
+			autocapitalize="off"
+			placeholder="Search apps and buttons, e.g. shuffle, mute"
+			[ngModel]="query()"
+			(ngModelChange)="query.set($event)"
+			name="appCatalogQuery"
+		/>
+		<button
+			type="button"
+			class="filter"
+			[class.filter--active]="installedOnly()"
+			[attr.aria-pressed]="installedOnly()"
+			(click)="toggleInstalledOnly()"
+		>
+			<i class="ph ph-funnel" aria-hidden="true"></i> Installed only
+		</button>
+	</div>
+	@if (query().trim()) {
+		@for (match of searchMatches(); track match.preset.id) {
+			<section class="group">
+				<h3 class="group__name">{{ match.preset.name }}</h3>
+				<div class="grid">
+					@for (preset of match.buttons; track preset.label; let i = $index) {
+						<sd-deck-key
+							[button]="preview(preset, i)"
+							[assetUrl]="assetUrl()"
+							(pressed)="added.emit(preset)"
+						/>
+					}
+				</div>
+			</section>
+		} @empty {
+			<p class="hint">No app or button matches.</p>
+		}
+	} @else {
+		<p class="hint">
+			Buttons for the controls of one app. Apps found on this computer come first.
+		</p>
+		<ul class="list">
+			@for (entry of visibleApps(); track entry.preset.id) {
+				<li>
+					<button type="button" class="app" (click)="selectedAppId.set(entry.preset.id)">
+						<i
+							[class]="iconClass(entry.preset)"
+							class="app__icon"
+							aria-hidden="true"
+						></i>
+						<span class="app__text">
+							<span class="app__name">{{ entry.preset.name }}</span>
+							<span class="app__meta">
+								@if (entry.installed) {
+									<span class="app__installed">Installed</span>
+								}
+								{{ entry.preset.buttons.length }} buttons
+							</span>
+						</span>
+						<i class="app__chevron ph ph-caret-right" aria-hidden="true"></i>
+					</button>
+				</li>
+			} @empty {
+				<li class="hint">None of these apps is installed on this computer.</li>
+			}
+		</ul>
+	}
+}

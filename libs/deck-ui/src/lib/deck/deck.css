@@ -1,0 +1,23 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply relative block size-full touch-none overflow-hidden select-none;
+}
+
+.track {
+	@apply flex size-full will-change-transform;
+	transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.dots {
+	@apply absolute right-0 bottom-1.5 left-0 flex justify-center gap-2;
+}
+
+.dot {
+	@apply size-2 rounded-full border-0 p-0;
+	background: color-mix(in srgb, var(--sd-text) 30%, transparent);
+}
+
+.dot--active {
+	background: color-mix(in srgb, var(--sd-text) 90%, transparent);
+}

@@ -1,0 +1,55 @@
+<div class="layout">
+	<aside class="side" [class.side--collapsed]="!sidebarOpen()">
+		<button
+			type="button"
+			class="side__toggle"
+			[attr.aria-label]="sidebarOpen() ? 'Hide pairing' : 'Show pairing'"
+			(click)="sidebarOpen.set(!sidebarOpen())"
+		>
+			<i
+				[class]="sidebarOpen() ? 'ph ph-caret-left' : 'ph ph-qr-code'"
+				aria-hidden="true"
+			></i>
+		</button>
+		@if (sidebarOpen()) {
+			<h1>Paneel</h1>
+			@if (!hostStatus.hostReachable()) {
+				<p class="muted">
+					The host is not reachable. Start the app through Wails to see pairing details.
+				</p>
+			} @else if (hostStatus.status(); as status) {
+				<p class="muted">
+					Port <strong>{{ status.port }}</strong> · decks connected:
+					<strong>{{ status.clients }}</strong>
+				</p>
+				<h2>Pair your phone</h2>
+				<p class="muted">
+					Scan with the phone's camera or open the URL in its browser. Both must be on the
+					same Wi-Fi.
+				</p>
+				@if (status.qrCodePng) {
+					<img
+						class="qr"
+						[src]="status.qrCodePng"
+						alt="Pairing QR code"
+						width="200"
+						height="200"
+					/>
+				}
+				<ul class="urls">
+					@for (url of status.pairingUrls; track url) {
+						<li>
+							<code>{{ url }}</code>
+						</li>
+					}
+				</ul>
+				<sd-assistant-key-form />
+			} @else {
+				<p class="muted">Starting host…</p>
+			}
+		}
+	</aside>
+	<section class="main">
+		<sd-shell />
+	</section>
+</div>

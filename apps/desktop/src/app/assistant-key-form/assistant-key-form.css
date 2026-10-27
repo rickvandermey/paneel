@@ -1,0 +1,30 @@
+@reference '../../../../../libs/styles/src/tailwind.css';
+
+:host {
+	@apply block;
+}
+
+h2 {
+	@apply mt-3 mb-0 text-[15px];
+}
+
+.muted {
+	@apply m-0 text-[13px] text-muted;
+}
+
+.api-key-form {
+	@apply my-2 flex flex-col gap-2;
+}
+
+.api-key-form select,
+.api-key-form input {
+	@apply sd-input;
+}
+
+.api-key-form select {
+	@apply sd-select;
+}
+
+.api-key-form button {
+	@apply sd-btn-primary px-3 py-2;
+}

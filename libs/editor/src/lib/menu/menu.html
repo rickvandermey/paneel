@@ -1,0 +1,66 @@
+<button
+	type="button"
+	class="backdrop"
+	aria-label="Close"
+	tabindex="-1"
+	(click)="closed.emit()"
+></button>
+<nav class="drawer" aria-label="Menu">
+	<header class="drawer__header">
+		<span class="drawer__status" [attr.data-status]="status()"></span>
+		<span class="drawer__host">{{ hostName() || 'Not connected' }}</span>
+		<button type="button" class="drawer__close" aria-label="Close menu" (click)="closed.emit()">
+			<i class="ph ph-x" aria-hidden="true"></i>
+		</button>
+	</header>
+
+	<h3 class="drawer__section">Buttons</h3>
+	<button type="button" class="item" (click)="selected.emit('edit')">
+		<i class="ph ph-pencil-simple" aria-hidden="true"></i>
+		<span>{{ editing() ? 'Stop editing' : 'Edit buttons' }}</span>
+	</button>
+	<button type="button" class="item" (click)="selected.emit('catalog')">
+		<i class="ph ph-squares-four" aria-hidden="true"></i>
+		<span>Add standard buttons</span>
+	</button>
+	<button type="button" class="item" (click)="selected.emit('app-catalog')">
+		<i class="ph ph-app-window" aria-hidden="true"></i>
+		<span>App buttons</span>
+	</button>
+	<button type="button" class="item" (click)="selected.emit('assistant')">
+		<i class="ph ph-sparkle" aria-hidden="true"></i>
+		<span>Build a page with AI</span>
+	</button>
+
+	<h3 class="drawer__section">Pages</h3>
+	<button type="button" class="item" (click)="selected.emit('profiles')">
+		<i class="ph ph-cards" aria-hidden="true"></i>
+		<span>Pages</span>
+	</button>
+	@for (profile of profiles(); track profile.id) {
+		<button
+			type="button"
+			class="item item--profile"
+			[class.item--active]="profile.id === activeProfileId()"
+			(click)="profileSelected.emit(profile.id)"
+		>
+			@if (profile.icon?.source === 'emoji') {
+				<span class="item__emoji">{{ emojiOf(profile.icon) }}</span>
+			} @else {
+				<i [class]="iconClass(profile)" aria-hidden="true"></i>
+			}
+			<span>{{ profile.name }}</span>
+			<span class="item__count">{{ profile.buttons.length }}</span>
+		</button>
+	}
+
+	<h3 class="drawer__section">Deck</h3>
+	<button type="button" class="item" (click)="selected.emit('theme')">
+		<i class="ph ph-palette" aria-hidden="true"></i>
+		<span>Theme</span>
+	</button>
+	<button type="button" class="item" (click)="selected.emit('settings')">
+		<i class="ph ph-gear" aria-hidden="true"></i>
+		<span>Settings</span>
+	</button>
+</nav>

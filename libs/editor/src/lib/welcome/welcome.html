@@ -1,0 +1,52 @@
+<section class="welcome">
+	<p class="eyebrow">Try it: these keys work right now</p>
+	<div class="examples">
+		@for (key of examples(); track key.id) {
+			<sd-deck-key [button]="key" (pressed)="examplePressed.emit(key)" />
+		}
+	</div>
+	<h1 class="title">
+		{{ connected() ? 'Your deck is empty' : 'Connecting to your computer…' }}
+	</h1>
+	<p class="lead">
+		A deck is a set of pages. Each page holds square keys that run actions on your computer:
+		shortcuts, apps, websites, media keys and terminal commands.
+	</p>
+	<ol class="steps">
+		<li>
+			<i class="ph-fill ph-cards" aria-hidden="true"></i>
+			<span
+				><strong>Add a page.</strong> Pick a preset such as Music or Coding, built from the
+				apps on your computer, or start blank.</span
+			>
+		</li>
+		<li>
+			<i class="ph-fill ph-squares-four" aria-hidden="true"></i>
+			<span
+				><strong>Fill it.</strong> Add standard buttons from the catalog or make your own
+				with an icon, a color and a list of actions.</span
+			>
+		</li>
+		<li>
+			<i class="ph-fill ph-hand-swipe-left" aria-hidden="true"></i>
+			<span
+				><strong>Use it.</strong> Swipe up and down between pages, left and right between
+				sets. Pages can follow the app that has the focus.</span
+			>
+		</li>
+	</ol>
+	<div class="actions">
+		<button type="button" class="primary" [disabled]="!connected()" (click)="addPage.emit()">
+			<i class="ph ph-plus" aria-hidden="true"></i> Add a page
+		</button>
+		<button
+			type="button"
+			class="secondary"
+			[disabled]="!connected()"
+			(click)="restoreSample.emit()"
+		>
+			<i class="ph ph-sparkle" aria-hidden="true"></i> Start with the sample page
+		</button>
+	</div>
+	<p class="hint">The menu at the top left has the catalog, themes and settings.</p>
+</section>

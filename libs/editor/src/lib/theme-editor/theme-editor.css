@@ -1,0 +1,122 @@
+@reference '../../../../styles/src/tailwind.css';
+
+:host {
+	@apply block;
+}
+
+.preview {
+	@apply mb-4 flex flex-col gap-2.5 rounded-sd-lg p-3 font-sd text-text;
+	@apply sd-themed-bg;
+}
+
+.preview__bar {
+	@apply flex gap-1.5;
+}
+
+.preview__chip {
+	@apply rounded-pill bg-surface px-2.5 py-[5px] text-[12px] text-muted;
+	@apply sd-surface-border;
+	@apply sd-heading;
+}
+
+.preview__chip--active {
+	@apply bg-accent text-accent-text;
+}
+
+.preview__keys {
+	@apply grid grid-cols-[repeat(3,64px)] gap-2;
+}
+
+.preview__panel {
+	@apply flex items-center gap-2.5 rounded-sd bg-surface px-3 py-2.5 text-[13px];
+	@apply sd-surface-border;
+	@apply sd-glass-blur;
+}
+
+.preview__title {
+	@apply sd-heading;
+}
+
+.preview__muted {
+	@apply flex-1 text-muted;
+}
+
+.preview__button {
+	@apply rounded-sd bg-surface-2 px-2.5 py-[5px];
+}
+
+.field {
+	@apply mb-2.5 flex flex-col gap-1 text-[13px] text-muted;
+}
+
+input[type='text'],
+select {
+	@apply sd-input;
+}
+
+select {
+	@apply sd-select;
+}
+
+.section {
+	@apply mt-[18px] mb-2 sd-section;
+}
+
+.colors {
+	@apply grid gap-2.5;
+	@apply sd-grid-fill-[104px];
+}
+
+.color {
+	@apply flex flex-col items-center gap-1.5 rounded-sd bg-bg px-1.5 py-2.5 text-[13px];
+}
+
+.color input {
+	@apply h-9 w-12 rounded-sd border border-border bg-transparent p-0;
+}
+
+.color__hint,
+.clear {
+	@apply text-[11px] text-faint;
+}
+
+.clear {
+	@apply border-0 bg-transparent p-0 text-[11px] text-danger-text;
+	@apply font-[inherit];
+}
+
+.slider {
+	@apply mb-2.5 flex flex-col gap-1 text-[13px] text-muted;
+}
+
+.slider strong {
+	@apply text-text;
+}
+
+.slider input {
+	@apply w-full accent-accent;
+}
+
+.hint {
+	@apply m-0 text-[13px] text-faint;
+}
+
+.footer {
+	@apply mt-5 flex gap-2;
+}
+
+.footer > * {
+	@apply flex-1;
+}
+
+.primary {
+	@apply sd-btn-primary;
+}
+
+.primary:disabled {
+	@apply opacity-50;
+}
+
+.secondary {
+	@apply sd-btn-secondary;
+}

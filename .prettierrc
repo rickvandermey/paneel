@@ -1,0 +1,14 @@
+{
+	"overrides": [
+		{
+			"files": ["*.html"],
+			"options": {
+				"parser": "angular"
+			}
+		}
+	],
+	"plugins": ["prettier-plugin-gherkin", "prettier-plugin-tailwindcss"],
+	"tailwindStylesheet": "./libs/styles/src/tailwind.css",
+	"printWidth": 100,
+	"singleQuote": true
+}

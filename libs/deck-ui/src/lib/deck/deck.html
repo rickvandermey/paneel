@@ -1,0 +1,30 @@
+<div class="track" [style.transform]="trackTransform()">
+	@for (set of sets(); track $index) {
+		<sd-deck-set
+			[buttons]="set"
+			[grid]="grid()"
+			[activeButtonId]="activeButtonId()"
+			[assetUrl]="assetUrl()"
+			[editing]="editing()"
+			[draggingId]="draggingKeyId()"
+			[dropTargetId]="dropTargetId()"
+			[buttonStates]="buttonStates()"
+			(pressed)="onKeyPressed($event)"
+		/>
+	}
+</div>
+@if (sets().length > 1) {
+	<div class="dots" role="tablist" aria-label="Sets">
+		@for (set of sets(); track $index) {
+			<button
+				type="button"
+				class="dot"
+				role="tab"
+				[class.dot--active]="$index === setIndex()"
+				[attr.aria-selected]="$index === setIndex()"
+				[attr.aria-label]="'Set ' + ($index + 1)"
+				(click)="goToSet($index)"
+			></button>
+		}
+	</div>
+}
