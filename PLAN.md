@@ -439,7 +439,8 @@ Ontwerp: docs/architecture/data-model-and-sync.md. Gedaan:
 
 Nog te doen in de MVP:
 
-- Eerste commit: de repo heeft nog geen geschiedenis, alle bestanden staan untracked.
+- Remote en CI: de repo heeft een eerste commit (27 oktober 2026) maar nog geen GitHub-remote,
+  dus de CI-workflow heeft nog nooit gedraaid.
 - Windows: de CI-job draaien en de Windows-specifieke code (app-iconen, apps-lijst, actieve app,
   launch, terminal, app activeren, `appControl`-terugval) op een echte machine nalopen. Linux
   idem (xdg-open, notify-send, MPRIS); beide zijn tot nu toe alleen gecompileerd.
