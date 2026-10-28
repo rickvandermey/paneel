@@ -436,14 +436,17 @@ Ontwerp: docs/architecture/data-model-and-sync.md. Gedaan:
       `sd-assistant-key-form`, gedeelde `sd-btn`-basis; schermafbeeldingen voor en na pixelgelijk.
 - Go-module hernoemd van `github.com/newstory/paneel/host` naar `github.com/paneel-nx/paneel/host`;
   bindings opnieuw gegenereerd.
+- Repo op github.com/rickvandermey/paneel (28 oktober 2026); de CI-workflow draait groen op alle
+  vier de jobs. Daarvoor nodig: de host-targets bouwen eerst de ingebedde frontends, golangci-lint
+  wordt in CI geinstalleerd, de Wails-bindings zijn gecommit, de Windows-build gebruikt cgo en
+  twee tests die op POSIX-bestandsrechten leunden slaan dat op Windows over.
 
 Nog te doen in de MVP:
 
-- Remote en CI: de repo heeft een eerste commit (27 oktober 2026) maar nog geen GitHub-remote,
-  dus de CI-workflow heeft nog nooit gedraaid.
-- Windows: de CI-job draaien en de Windows-specifieke code (app-iconen, apps-lijst, actieve app,
-  launch, terminal, app activeren, `appControl`-terugval) op een echte machine nalopen. Linux
-  idem (xdg-open, notify-send, MPRIS); beide zijn tot nu toe alleen gecompileerd.
+- Windows: de code compileert en de Go-tests slagen in CI (sinds 28 oktober 2026), maar de
+  Windows-specifieke code (app-iconen, apps-lijst, actieve app, launch, terminal, app activeren,
+  `appControl`-terugval) is nog niet op een echte machine nagelopen. Linux idem (xdg-open,
+  notify-send, MPRIS), daar is zelfs nog geen CI-job voor.
 - Tray-menu en venstergedrag met de hand bekijken (openen, sluiten, afsluiten).
 - Pairing met pincode naast QR en token; autostart bij aanmelden.
 - Onboarding: uitleg bij de Accessibility-prompt (macOS) en de firewall (Windows); de host kent
