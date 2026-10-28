@@ -448,8 +448,9 @@ Ontwerp: docs/architecture/data-model-and-sync.md. Gedaan:
   Nx-targets `sync-android`, `run-android` en `build-apk`; de debug-APK bouwt lokaal (40 MB).
   Webmanifest met iconen voor "Add to Home Screen"; een echte PWA met service worker vraagt
   HTTPS en blijft liggen. Platformverschillen zitten in `apps/mobile/src/app/device.ts`.
-  Op de telefoon getest: pairen, knoppen en scherm-aan werken; het mixed-content-probleem met
-  app-iconen is in de emulator gereproduceerd en verholpen.
+  Op de telefoon getest (28 oktober 2026): pairen via QR, knoppen, iconen en scherm-aan werken
+  tegen de desktop-host; het mixed-content-probleem met app-iconen is in de emulator
+  gereproduceerd en verholpen. Release-signing voor de Play Store komt later.
 
 ### Vervolgstappen (volgorde, bijgewerkt 28 oktober 2026)
 
@@ -457,24 +458,20 @@ De MVP is functioneel compleet voor macOS plus het webdeck. Wat ontbreekt zit in
 toestel" en "op een ander OS"; dat bepaalt de volgorde. Na elke stap: lint, tests en de e2e-suite,
 en een commit per stap.
 
-1. **Android-app op de telefoon testen.** De APK bouwt (`pnpm nx build-apk mobile`); installeren
-   via `adb install` of het bestand, pairen door de QR te scannen, knoppen drukken, scherm-aan en
-   de reconnect na een poortwissel controleren. Daarna dagelijks gebruiken; wat opvalt komt op
-   deze lijst. Release-signing voor de Play Store en een echte PWA (vraagt TLS) komen later.
-2. **Tray, venster en onboarding op macOS.** Het Wails-venster en het tray-menu met de hand
+1. **Tray, venster en onboarding op macOS.** Het Wails-venster en het tray-menu met de hand
    nalopen (openen, sluiten, afsluiten, weer openen). Een uitlegscherm bij de
    Accessibility-prompt; de host kent de status al (`activeapp.Trusted`), er is alleen geen
    scherm voor. Autostart bij aanmelden.
-3. **Windows en Linux echt draaien.** De Windows-host compileert en de Go-tests slagen in CI,
+2. **Windows en Linux echt draaien.** De Windows-host compileert en de Go-tests slagen in CI,
    maar app-iconen, apps-lijst, actieve app, launch, terminal, app activeren en de
    `appControl`-terugval zijn nog nooit op een Windows-machine uitgevoerd. Dat vraagt een VM of
    een tweede machine, plus een firewall-uitleg bij de eerste start. Linux: een CI-job
    toevoegen (xdg-open, notify-send, MPRIS compileren alleen) en daarna hetzelfde op een
    echte machine.
-4. **Installers.** De Wails-Taskfile heeft een `package:dmg`-taak; notarisatie en een
+3. **Installers.** De Wails-Taskfile heeft een `package:dmg`-taak; notarisatie en een
    Windows-installer zijn niet ingericht en CI levert alleen `.app` en `.exe` als artifact.
    Pas nodig zodra iemand anders het installeert.
-5. **Kleinere MVP-restpunten**, in willekeurige volgorde:
+4. **Kleinere MVP-restpunten**, in willekeurige volgorde:
     - knoppen verplaatsen tussen pagina's en mappen (slepen werkt alleen binnen een pagina);
     - pairing met pincode naast QR en token;
     - het e2e-scenario "token roteren" automatiseren (vraagt een herverbinding in de test);
