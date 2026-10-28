@@ -20,7 +20,10 @@ import {
 /** The host restarts on its new port shortly after a network change; following it earlier would fail. */
 const FOLLOW_HOST_DELAY_MS = 1500;
 
-/** The deck on the phone: the shell once paired, otherwise the pairing screen. */
+/**
+ * The deck on the phone: the shell once the client was told to connect, otherwise the pairing
+ * screen. The entered URL alone does not count, or the screen would vanish while typing.
+ */
 @Component({
 	selector: 'sd-root',
 	imports: [Shell, FormsModule],

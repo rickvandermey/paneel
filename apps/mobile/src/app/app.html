@@ -1,4 +1,4 @@
-@if (enteredPairingUrl() && client.status() !== 'unpaired') {
+@if (client.pairingUrl() && client.status() !== 'unpaired') {
 	<sd-shell [canDisconnect]="true" (disconnected)="forgetComputer()" />
 } @else {
 	<main class="pair">

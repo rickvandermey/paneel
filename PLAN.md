@@ -443,11 +443,13 @@ Ontwerp: docs/architecture/data-model-and-sync.md. Gedaan:
 - Android-app via Capacitor 8 (`apps/mobile/android`, gecommit): dezelfde deckbuild als de host
   serveert, app-id `app.paneel.deck`, minimaal Android 8.0. In de app: QR-scannen op het
   pairingscherm (`@capacitor/barcode-scanner`), scherm-aan via keep-awake, geen herladen bij een
-  nieuwe deckbuild. Mixed content en cleartext staan aan omdat de host geen TLS heeft.
+  nieuwe deckbuild. De app draait op het http-schema (cleartext aan) omdat de host geen TLS
+  heeft; op https blokkeerde de WebView de iconen van de host als mixed content.
   Nx-targets `sync-android`, `run-android` en `build-apk`; de debug-APK bouwt lokaal (40 MB).
   Webmanifest met iconen voor "Add to Home Screen"; een echte PWA met service worker vraagt
   HTTPS en blijft liggen. Platformverschillen zitten in `apps/mobile/src/app/device.ts`.
-  Nog niet op een telefoon getest: er was geen toestel aangesloten.
+  Op de telefoon getest: pairen, knoppen en scherm-aan werken; het mixed-content-probleem met
+  app-iconen is in de emulator gereproduceerd en verholpen.
 
 ### Vervolgstappen (volgorde, bijgewerkt 28 oktober 2026)
 
