@@ -46,6 +46,16 @@ func New(opts Options) (*Handler, error) {
 
 func (handler *Handler) Buffer() *Buffer { return handler.buffer }
 
+// Close releases the log file; lines logged afterwards still reach the buffer and stderr.
+func (handler *Handler) Close() error {
+	if handler.file == nil {
+		return nil
+	}
+	err := handler.file.Close()
+	handler.file = nil
+	return err
+}
+
 // SetVerbose switches between info and debug level for every output at once.
 func (handler *Handler) SetVerbose(verbose bool) {
 	if verbose {

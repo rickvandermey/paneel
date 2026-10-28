@@ -105,6 +105,13 @@
 		"test": {
 			"executor": "nx:run-commands",
 			"cache": true,
+			"dependsOn": [
+				{
+					"projects": ["desktop", "mobile"],
+					"target": "build",
+					"params": "ignore"
+				}
+			],
 			"inputs": ["goSources"],
 			"options": {
 				"command": "go test ./...",
@@ -114,6 +121,13 @@
 		"typecheck": {
 			"executor": "nx:run-commands",
 			"cache": true,
+			"dependsOn": [
+				{
+					"projects": ["desktop", "mobile"],
+					"target": "build",
+					"params": "ignore"
+				}
+			],
 			"inputs": ["goSources"],
 			"options": {
 				"command": "go vet ./...",
@@ -123,6 +137,13 @@
 		"lint": {
 			"executor": "nx:run-commands",
 			"cache": true,
+			"dependsOn": [
+				{
+					"projects": ["desktop", "mobile"],
+					"target": "build",
+					"params": "ignore"
+				}
+			],
 			"inputs": ["goSources", "{projectRoot}/.golangci.yml"],
 			"options": {
 				"command": "golangci-lint run ./...",

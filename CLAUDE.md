@@ -29,7 +29,7 @@ Paneel turns a phone into a control panel for the desk: open source, no hardware
 - Logging: the host logs through `slog` into `internal/logs` (ring buffer, `host.log` next to the config, stderr); decks send their own lines with a `log` message. Log labels, action kinds and commands, never the pairing token, typed text or prompts. Info for what a user did, debug for the noise (active app, terminal decisions, API calls).
 - AI page builder (`internal/assistant`): the model answers in one fixed JSON shape (question, plan or decline) through structured outputs; the host validates every reply against the catalog the deck sent and never writes the config itself. Keys live in `secrets.json` next to the config, set from the desktop window or the environment, never from a deck. The `-assistant-fake` flag answers without a network; the e2e suite uses it.
 - Protocol changes go to both `apps/host/internal/protocol/messages.go` and `libs/protocol/src/lib/protocol.ts`.
-- After changing a Wails-bound Go service, run `pnpm nx bindings host` (output `apps/desktop/src/bindings`, generated, ignored by git and lint).
+- After changing a Wails-bound Go service, run `pnpm nx bindings host` and commit the result (output `apps/desktop/src/bindings`, generated and ignored by lint and Prettier, but committed so CI and a checkout without Go can build the desktop app).
 - Formatting follows hvs: tabs (4 wide), Prettier with `printWidth` 100, single quotes, the Angular parser for HTML, `prettier-plugin-gherkin` for feature files and `prettier-plugin-tailwindcss` for class order. Run `pnpm prettier --write .` before handing work over; generated files are listed in `.prettierignore`.
 - Conventional Commits. No ticket prefix required.
 

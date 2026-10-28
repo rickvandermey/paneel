@@ -6,6 +6,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -203,9 +204,12 @@ func TestSecretsFileIsPrivateAndEnvWins(t *testing.T) {
 	if err := secrets.Set(ProviderOpenAI, "sk-file"); err != nil {
 		t.Fatal(err)
 	}
-	info, err := os.Stat(filepath.Join(dir, SecretsFile))
-	if err != nil || info.Mode().Perm() != 0o600 {
-		t.Fatalf("secrets file should be 0600: %v %v", info, err)
+	// Windows has no POSIX file modes, so the owner-only check only means something elsewhere.
+	if runtime.GOOS != "windows" {
+		info, err := os.Stat(filepath.Join(dir, SecretsFile))
+		if err != nil || info.Mode().Perm() != 0o600 {
+			t.Fatalf("secrets file should be 0600: %v %v", info, err)
+		}
 	}
 	t.Setenv("OPENAI_API_KEY", "sk-env")
 	if secrets.Key(ProviderOpenAI) != "sk-env" {

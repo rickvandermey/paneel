@@ -74,6 +74,18 @@ func (rotating *rotatingFile) rotate() error {
 	return rotating.open()
 }
 
+// Close releases the file; Windows cannot delete or rename a file that is still open.
+func (rotating *rotatingFile) Close() error {
+	rotating.mu.Lock()
+	defer rotating.mu.Unlock()
+	if rotating.file == nil {
+		return nil
+	}
+	err := rotating.file.Close()
+	rotating.file = nil
+	return err
+}
+
 func (rotating *rotatingFile) rotatedPath(index int) string {
 	return fmt.Sprintf("%s.%d", rotating.path, index)
 }

@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/paneel-nx/paneel/host/internal/protocol"
@@ -57,9 +58,12 @@ func TestSaveAndLoadRoundTrip(t *testing.T) {
 	if err := SaveTo(path, file); err != nil {
 		t.Fatalf("save: %v", err)
 	}
-	info, err := os.Stat(path)
-	if err != nil || info.Mode().Perm() != 0o600 {
-		t.Fatalf("stat: err=%v mode=%v", err, info.Mode())
+	// Windows has no POSIX file modes, so the owner-only check only means something elsewhere.
+	if runtime.GOOS != "windows" {
+		info, err := os.Stat(path)
+		if err != nil || info.Mode().Perm() != 0o600 {
+			t.Fatalf("stat: err=%v mode=%v", err, info.Mode())
+		}
 	}
 	leftovers, _ := filepath.Glob(filepath.Join(filepath.Dir(path), "*.tmp"))
 	if len(leftovers) != 0 {

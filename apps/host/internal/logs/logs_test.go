@@ -72,6 +72,7 @@ func TestAppendFromDeckGoesToBufferAndFile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	t.Cleanup(func() { _ = handler.Close() })
 	handler.Append(Entry{Level: "warn", Source: SourceDeck, Message: "reconnecting", Fields: "url=http://h/?token=abc"})
 	data, err := os.ReadFile(filepath.Join(dir, FileName))
 	if err != nil {
@@ -92,6 +93,7 @@ func TestRotatingFileShiftsOldFiles(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	t.Cleanup(func() { _ = rotating.Close() })
 	line := strings.Repeat("x", 1024) + "\n"
 	for index := 0; index < 3*1024+10; index++ {
 		if err := rotating.Write(line); err != nil {

@@ -56,11 +56,11 @@ vitest.config.*.timestamp*
 .nx/migrate-runs
 .vitest
 
-# Go host build artefacts and embedded frontend builds
+# Go host build artefacts and embedded frontend builds (the Wails bindings in
+# apps/desktop/src/bindings are generated too, but committed so the desktop app builds without Go)
 apps/host/bin/
 apps/host/frontend/dist/
 apps/host/static/deck/
-apps/desktop/src/bindings/
 
 # Scratch output of local runs (e2e host config, temporary builds)
 /tmp
