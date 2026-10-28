@@ -441,23 +441,38 @@ Ontwerp: docs/architecture/data-model-and-sync.md. Gedaan:
   wordt in CI geinstalleerd, de Wails-bindings zijn gecommit, de Windows-build gebruikt cgo en
   twee tests die op POSIX-bestandsrechten leunden slaan dat op Windows over.
 
-Nog te doen in de MVP:
+### Vervolgstappen (volgorde, bijgewerkt 28 oktober 2026)
 
-- Windows: de code compileert en de Go-tests slagen in CI (sinds 28 oktober 2026), maar de
-  Windows-specifieke code (app-iconen, apps-lijst, actieve app, launch, terminal, app activeren,
-  `appControl`-terugval) is nog niet op een echte machine nagelopen. Linux idem (xdg-open,
-  notify-send, MPRIS), daar is zelfs nog geen CI-job voor.
-- Tray-menu en venstergedrag met de hand bekijken (openen, sluiten, afsluiten).
-- Pairing met pincode naast QR en token; autostart bij aanmelden.
-- Onboarding: uitleg bij de Accessibility-prompt (macOS) en de firewall (Windows); de host kent
-  de Accessibility-status al, er is alleen nog geen scherm voor.
-- Knoppen verplaatsen tussen pagina's en mappen (slepen werkt nu alleen binnen een pagina).
-- Capacitor-build (Android-APK, sideload) en PWA-fallback; `apps/mobile` is nu alleen de webbuild
-  die de host serveert.
-- Installers: de Wails-Taskfile heeft een `package:dmg`-taak, maar notarisatie en een
-  Windows-installer zijn niet ingericht; CI levert alleen `.app` en `.exe` als artifact.
-- App-knoppen: de sneltoetsen van de elf laatste apps zijn uit documentatie overgenomen en niet
-  tegen de echte apps getest; op Windows kan Spotify-shuffle alleen togglen (sneltoets), niet
-  expliciet aan of uit.
-- Het scenario "token roteren" is `@manual`; automatiseren vraagt een herverbinding in de test.
-- OBS schuift naar fase 3.
+De MVP is functioneel compleet voor macOS plus het webdeck. Wat ontbreekt zit in "op een echt
+toestel" en "op een ander OS"; dat bepaalt de volgorde. Na elke stap: lint, tests en de e2e-suite,
+en een commit per stap.
+
+1. **Android via Capacitor.** Het doel van fase 2 is eigen gebruik op Android plus Mac.
+   `apps/mobile` is nu alleen de webbuild die de host serveert. Capacitor toevoegen, een APK
+   voor sideload bouwen, scherm-aan en haptics als echte app, en de PWA-fallback (manifest,
+   installeerbaar vanuit de browser). Daarna dagelijks gebruiken; wat opvalt komt op deze lijst.
+2. **Tray, venster en onboarding op macOS.** Het Wails-venster en het tray-menu met de hand
+   nalopen (openen, sluiten, afsluiten, weer openen). Een uitlegscherm bij de
+   Accessibility-prompt; de host kent de status al (`activeapp.Trusted`), er is alleen geen
+   scherm voor. Autostart bij aanmelden.
+3. **Windows en Linux echt draaien.** De Windows-host compileert en de Go-tests slagen in CI,
+   maar app-iconen, apps-lijst, actieve app, launch, terminal, app activeren en de
+   `appControl`-terugval zijn nog nooit op een Windows-machine uitgevoerd. Dat vraagt een VM of
+   een tweede machine, plus een firewall-uitleg bij de eerste start. Linux: een CI-job
+   toevoegen (xdg-open, notify-send, MPRIS compileren alleen) en daarna hetzelfde op een
+   echte machine.
+4. **Installers.** De Wails-Taskfile heeft een `package:dmg`-taak; notarisatie en een
+   Windows-installer zijn niet ingericht en CI levert alleen `.app` en `.exe` als artifact.
+   Pas nodig zodra iemand anders het installeert.
+5. **Kleinere MVP-restpunten**, in willekeurige volgorde:
+    - knoppen verplaatsen tussen pagina's en mappen (slepen werkt alleen binnen een pagina);
+    - pairing met pincode naast QR en token;
+    - het e2e-scenario "token roteren" automatiseren (vraagt een herverbinding in de test);
+    - de sneltoetsen van de elf laatste app-presets tegen de echte apps controleren; op
+      Windows kan Spotify-shuffle alleen togglen via de sneltoets, niet expliciet aan of uit.
+
+Daarna fase 3: appstaat teruglezen voor toggle-lampjes (Spotify shuffle, Discord en Slack
+mute), OBS via obs-websocket, VLC als derde `appControl`-app, variabelen op knoppen, iOS via
+dezelfde Capacitor-code, en documentatie voor bijdragers. Het hernoemen van `@sd/*` en de
+`sd`-prefix naar de merknaam blijft een losse mechanische stap die niets oplevert voor eigen
+gebruik; de e2e-suite leunt op de `sd-*`-selectors.
