@@ -80,6 +80,31 @@
 				"staticFilePath": "apps/host/static/deck",
 				"spa": true
 			}
+		},
+		"sync-android": {
+			"executor": "nx:run-commands",
+			"dependsOn": ["build"],
+			"options": {
+				"command": "cap sync android",
+				"cwd": "apps/mobile"
+			}
+		},
+		"run-android": {
+			"executor": "nx:run-commands",
+			"dependsOn": ["sync-android"],
+			"options": {
+				"command": "cap run android",
+				"cwd": "apps/mobile"
+			}
+		},
+		"build-apk": {
+			"executor": "nx:run-commands",
+			"dependsOn": ["sync-android"],
+			"outputs": ["{projectRoot}/android/app/build/outputs/apk"],
+			"options": {
+				"command": "./gradlew assembleDebug",
+				"cwd": "apps/mobile/android"
+			}
 		}
 	}
 }

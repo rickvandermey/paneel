@@ -33,3 +33,7 @@
 .pair button {
 	@apply border-0 bg-accent font-semibold text-accent-text;
 }
+
+.pair .scan {
+	@apply inline-flex items-center justify-center gap-2 text-[18px];
+}

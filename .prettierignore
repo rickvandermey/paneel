@@ -19,3 +19,5 @@ libs/editor/src/lib/icon-picker/simple-icons-names.ts
 /test-reports
 /tmp
 /test-results
+apps/mobile/android
+pnpm-lock.yaml

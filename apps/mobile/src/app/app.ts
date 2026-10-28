@@ -9,6 +9,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Shell } from '@sd/editor';
 import { HostClient } from '@sd/host-client';
+import { isNativeApp, keepScreenAwake, scanQrCode } from './device';
 import {
 	clearSavedPairingUrl,
 	readSavedPairingUrl,
@@ -31,6 +32,9 @@ export class App {
 	readonly client = inject(HostClient);
 	/** What the pairing screen shows and edits; the client's own pairingUrl is the connected one. */
 	readonly enteredPairingUrl = signal(takeTokenFromAddressBar() ?? readSavedPairingUrl());
+	/** The Android app can scan the QR code itself; a browser tab opens the link from the camera app. */
+	readonly canScan = isNativeApp();
+	readonly scanError = signal('');
 
 	private loadedDeckBuild: string | null = null;
 
@@ -53,16 +57,33 @@ export class App {
 		this.client.connect(url);
 	}
 
+	async scanAndConnect(): Promise<void> {
+		this.scanError.set('');
+		try {
+			const scanned = await scanQrCode();
+			if (!scanned) {
+				return;
+			}
+			this.enteredPairingUrl.set(scanned);
+			this.connect();
+		} catch {
+			this.scanError.set('Could not open the camera. Paste the pairing URL instead.');
+		}
+	}
+
 	forgetComputer(): void {
 		clearSavedPairingUrl();
 		this.enteredPairingUrl.set('');
 		this.client.disconnect();
 	}
 
-	/** The host serves this page; after a host upgrade the open tab would keep running old code. */
+	/**
+	 * The host serves this page; after a host upgrade the open tab would keep running old code.
+	 * The Android app carries its own bundle, so there is nothing to reload there.
+	 */
 	private reloadWhenDeckBuildChanges(): void {
 		const build = this.client.hostInfo()?.deckBuild;
-		if (!build) {
+		if (!build || isNativeApp()) {
 			return;
 		}
 		if (this.loadedDeckBuild === null) {
@@ -75,7 +96,7 @@ export class App {
 
 	private keepScreenAwakeWhileConnected(): void {
 		if (this.client.status() === 'connected') {
-			void this.requestWakeLock();
+			void keepScreenAwake();
 		}
 	}
 
@@ -94,15 +115,6 @@ export class App {
 		const newHostUrl = new URL(url);
 		if (newHostUrl.hostname === location.hostname && newHostUrl.port !== location.port) {
 			setTimeout(() => location.assign(url), FOLLOW_HOST_DELAY_MS);
-		}
-	}
-
-	/** The sentinel is not kept: the browser releases the lock itself when the tab goes to the background. */
-	private async requestWakeLock(): Promise<void> {
-		try {
-			await navigator.wakeLock?.request('screen');
-		} catch {
-			// Not supported, or the page is not visible; the screen then dims as usual.
 		}
 	}
 }

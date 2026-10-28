@@ -6,7 +6,18 @@
 		@if (client.status() === 'unpaired' && client.error(); as error) {
 			<p class="error">{{ error }}</p>
 		}
-		<p>Scan the QR code in the desktop app, or paste the pairing URL it shows.</p>
+		@if (scanError()) {
+			<p class="error">{{ scanError() }}</p>
+		}
+		@if (canScan) {
+			<p>Scan the QR code in the Paneel app on your computer.</p>
+			<button type="button" class="scan" (click)="scanAndConnect()">
+				<i class="ph ph-qr-code" aria-hidden="true"></i> Scan QR code
+			</button>
+			<p>Or paste the pairing URL it shows.</p>
+		} @else {
+			<p>Scan the QR code in the desktop app, or paste the pairing URL it shows.</p>
+		}
 		<input
 			type="url"
 			inputmode="url"

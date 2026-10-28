@@ -440,6 +440,14 @@ Ontwerp: docs/architecture/data-model-and-sync.md. Gedaan:
   vier de jobs. Daarvoor nodig: de host-targets bouwen eerst de ingebedde frontends, golangci-lint
   wordt in CI geinstalleerd, de Wails-bindings zijn gecommit, de Windows-build gebruikt cgo en
   twee tests die op POSIX-bestandsrechten leunden slaan dat op Windows over.
+- Android-app via Capacitor 8 (`apps/mobile/android`, gecommit): dezelfde deckbuild als de host
+  serveert, app-id `app.paneel.deck`, minimaal Android 8.0. In de app: QR-scannen op het
+  pairingscherm (`@capacitor/barcode-scanner`), scherm-aan via keep-awake, geen herladen bij een
+  nieuwe deckbuild. Mixed content en cleartext staan aan omdat de host geen TLS heeft.
+  Nx-targets `sync-android`, `run-android` en `build-apk`; de debug-APK bouwt lokaal (40 MB).
+  Webmanifest met iconen voor "Add to Home Screen"; een echte PWA met service worker vraagt
+  HTTPS en blijft liggen. Platformverschillen zitten in `apps/mobile/src/app/device.ts`.
+  Nog niet op een telefoon getest: er was geen toestel aangesloten.
 
 ### Vervolgstappen (volgorde, bijgewerkt 28 oktober 2026)
 
@@ -447,10 +455,10 @@ De MVP is functioneel compleet voor macOS plus het webdeck. Wat ontbreekt zit in
 toestel" en "op een ander OS"; dat bepaalt de volgorde. Na elke stap: lint, tests en de e2e-suite,
 en een commit per stap.
 
-1. **Android via Capacitor.** Het doel van fase 2 is eigen gebruik op Android plus Mac.
-   `apps/mobile` is nu alleen de webbuild die de host serveert. Capacitor toevoegen, een APK
-   voor sideload bouwen, scherm-aan en haptics als echte app, en de PWA-fallback (manifest,
-   installeerbaar vanuit de browser). Daarna dagelijks gebruiken; wat opvalt komt op deze lijst.
+1. **Android-app op de telefoon testen.** De APK bouwt (`pnpm nx build-apk mobile`); installeren
+   via `adb install` of het bestand, pairen door de QR te scannen, knoppen drukken, scherm-aan en
+   de reconnect na een poortwissel controleren. Daarna dagelijks gebruiken; wat opvalt komt op
+   deze lijst. Release-signing voor de Play Store en een echte PWA (vraagt TLS) komen later.
 2. **Tray, venster en onboarding op macOS.** Het Wails-venster en het tray-menu met de hand
    nalopen (openen, sluiten, afsluiten, weer openen). Een uitlegscherm bij de
    Accessibility-prompt; de host kent de status al (`activeapp.Trusted`), er is alleen geen

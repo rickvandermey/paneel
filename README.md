@@ -6,6 +6,7 @@ Status: **MVP, in daily use on macOS**; Windows and Linux compile but are untest
 
 ## What it does today
 
+- **Android app**: the same deck as a Capacitor app, with in-app QR scanning, screen kept awake and a home-screen icon; the web deck also offers "Add to Home Screen" through its manifest.
 - **Deck on the phone**: square keys sized to the viewport, swipe between sets and pages, folders, toggle keys with a second state and a lamp, haptics, wake lock, reconnect.
 - **Editor on phone and desktop, in sync**: label, color, icon (installed app, website favicon, Phosphor, Simple Icons logos, emoji, upload), drag to reorder, multi-action buttons with delays, a Try button, themes and color palettes (built-in and your own).
 - **Actions**: hotkey (optionally focusing an app first), type text, launch app, open URL, shell command, terminal command (Terminal, iTerm2, Windows Terminal; new tab or window, with a prompt for Claude or Codex), media keys, delay, and `appControl` for Spotify and Apple Music (shuffle, repeat, play/pause, next, previous) that scripts the app instead of sending keys (AppleScript on macOS, MPRIS on Linux).
@@ -19,7 +20,7 @@ Status: **MVP, in daily use on macOS**; Windows and Linux compile but are untest
 | ------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
 | Desktop host | Go 1.27, [Wails v3](https://v3.wails.io) (tray + window), [robotgo](https://github.com/go-vgo/robotgo) for input, WebSocket + mDNS |
 | Desktop UI   | Angular 22 in the Wails webview (`apps/desktop`)                                                                                   |
-| Deck client  | Angular 22, served by the host as a web app; Capacitor wrapper for Android/iOS follows (`apps/mobile`)                             |
+| Deck client  | Angular 22, served by the host as a web app and wrapped by Capacitor 8 as the Android app (`apps/mobile`)                          |
 | Workspace    | Nx 24, pnpm 11, Node 24, Vitest, Playwright, ESLint, Prettier                                                                      |
 
 ## Prerequisites
@@ -28,6 +29,7 @@ Status: **MVP, in daily use on macOS**; Windows and Linux compile but are untest
 - Go 1.27+, Xcode Command Line Tools (macOS) or MSVC build tools (Windows) for cgo
 - Wails CLI: `go install github.com/wailsapp/wails/v3/cmd/wails3@v3.0.0`
 - golangci-lint (optional, for `nx lint host`)
+- For the Android app: Android Studio (its bundled JDK 21 and the SDK with platform 36); set `JAVA_HOME` to `/Applications/Android Studio.app/Contents/jbr/Contents/Home` when the system Java is newer than Gradle supports
 
 ## Quick start
 
@@ -61,6 +63,8 @@ pnpm nx package host                        # macOS app bundle in apps/host/bin
 pnpm nx bindings host                       # regenerate TypeScript bindings after changing Go services
 pnpm nx build host                          # production build via wails3 (bin/)
 pnpm nx serve mobile                        # Angular dev server for the deck client on :4300
+pnpm nx build-apk mobile                    # debug APK for sideloading, in apps/mobile/android/app/build/outputs/apk/debug
+pnpm nx run-android mobile                  # build, sync and start the app on a connected phone or emulator
 pnpm nx graph                               # project graph
 node tools/scripts/generate-phosphor-names.mjs       # after upgrading @phosphor-icons/web
 node tools/scripts/generate-simple-icons-names.mjs   # after upgrading simple-icons
@@ -94,7 +98,7 @@ With `-record-actions` the host validates every action and appends it as a JSON 
 ```
 apps/host       Go host: core, actions, appcontrol (Spotify/Music scripting), activeapp, WebSocket server, mDNS, Wails main
 apps/desktop    Angular UI shown in the Wails window (builds into apps/host/frontend/dist)
-apps/mobile     Angular deck client (builds into apps/host/static/deck, embedded and served by the host)
+apps/mobile     Angular deck client (builds into apps/host/static/deck, embedded and served by the host; apps/mobile/android wraps the same build as the Android app)
 libs/protocol   Message and model types shared with the Go host
 libs/host-client WebSocket client with reconnect, exposed as Angular signals
 libs/deck-ui    Deck grid, keys, swipe and drag-to-reorder

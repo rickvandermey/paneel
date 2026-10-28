@@ -37,3 +37,12 @@ Feature: Pairing and connection
 		When I open the menu entry "Settings"
 		And I click "Forget this computer"
 		Then I should see the pairing screen
+
+	@manual
+	@android
+	Scenario: The Android app pairs by scanning the QR code
+		Given the Paneel app is installed on an Android phone on the same Wi-Fi
+		When I open the app and tap "Scan QR code"
+		And I point the camera at the QR code in the desktop app
+		Then the deck should be connected
+		And pressing "Copy" should run the hotkey on the computer

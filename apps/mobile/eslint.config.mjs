@@ -2,6 +2,8 @@ import nx from '@nx/eslint-plugin';
 import baseConfig from '../../eslint.config.mjs';
 
 export default [
+	// The Android project holds the copied web build and Gradle files, nothing to lint.
+	{ ignores: ['android/**'] },
 	...nx.configs['flat/angular'],
 	...nx.configs['flat/angular-template'],
 	...baseConfig,
